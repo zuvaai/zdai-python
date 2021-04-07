@@ -1,0 +1,22 @@
+# Pycharm Ignores
+__pycache__/
+*.pyc
+*.manifest
+*.spec
+target/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+.idea/
+
+# VS Code Ignores
+.vscode
+
+# Ignore user-specific kdai wrapper
+kdai/config/access.json
+
+#Others
+.DS_Store
+test_script*
