@@ -14,7 +14,6 @@ also test all of the endpoints to make sure they return successfully.
 python3 -m kdai --set-token <put token here>
 python3 -m kdai --set-url <put url here>
 python3 -m kdai --test connection
-python3 -m kdai --test endpoints
 ```
 
 Add the kdai folder to your Python Interpreter's site-packages to make it easier to use/import in your projects.
