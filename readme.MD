@@ -2,13 +2,12 @@
 
 # Wrapper
 
-The API wrapper is designed to reflect the decoupled nature of KDAI's microservices. Meaning, there is one wrapper   
+The API wrapper is designed to reflect the decoupled nature of KDAI's microservices. Meaning, there is one wrapper 
 class for each microservice.
 
 ## Setup
 
-The following commands will set up the wrapper and test your credentials to make sure they're valid. It will  
-also test all of the endpoints to make sure they return successfully.
+The following commands will set up the wrapper and test your credentials to make sure they're valid.
 
 ```terminal
 python3 -m kdai --set-token <put token here>
@@ -26,8 +25,7 @@ the below packages:
 ## Authorization
 
 Every API call to the KDAI requires an Authorization token in the header. You can provide these in the wrapper's
-configuration  
-file found in config/access.json and access them using the below method, or provide them from other sources.
+configuration file found in config/access.json and access them using the below method, or provide them from other sources.
 
 ### Method 1: Provide the token via the KDAISDK Constructor
 
