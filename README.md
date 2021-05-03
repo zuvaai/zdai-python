@@ -85,8 +85,8 @@ kdai = KDAISDK(from_config = True)
 with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = kdai.file.create(content = f.read())
 
-classification_job, _ = kdai.classification.create(file_ids = [file.id])[0]
-classification_status, _ = kdai.classification.get(request_id = classification_job.request_id)
+classification_jobs, _ = kdai.classification.create(file_ids = [file.id])
+classification_status, _ = kdai.classification.get(request_id = classification_jobs[0].request_id)
 ```
 
 Note that the above accepts a list of ```file_ids```.
