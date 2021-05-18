@@ -23,3 +23,9 @@ class BaseModel(object):
             pass
 
         return self._data.get('status') in ['failed', 'complete']
+
+    def is_successful(self) -> bool:
+        """
+        Returns whether the status is set to 'complete' (i.e. a request that completed successfully).
+        """
+        return self._data.get('status') == 'complete'
