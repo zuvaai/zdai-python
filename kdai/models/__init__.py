@@ -2,7 +2,6 @@ from .basemodel import BaseModel
 from .classification import Classification
 from .extraction import Extraction
 from .extractionfield import ExtractionField
-from .extractionfieldscore import ExtractionFieldScore
 from .extractionresult import ExtractionResult
 from .extractionstatus import ExtractionStatus
 from .field import Field
