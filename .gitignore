@@ -14,8 +14,8 @@ target/
 # VS Code Ignores
 .vscode
 
-# Ignore user-specific kdai wrapper
-kdai/config/access.json
+# Ignore user-specific zdai wrapper
+zdai/config/access.json
 
 #Others
 .DS_Store
