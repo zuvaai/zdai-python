@@ -18,6 +18,7 @@ from .extraction import Extraction
 from .extractionfield import ExtractionField
 from .extractionresult import ExtractionResult
 from .extractionstatus import ExtractionStatus
+from .extractionspan import ExtractionSpan
 from .field import Field
 from .file import File
 from .language import Language

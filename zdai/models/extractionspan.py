@@ -13,22 +13,40 @@
 # limitations under the License.
 
 from .basemodel import BaseModel
-from .extractionspan import ExtractionSpan
 
 
-class ExtractionResult(BaseModel):
+class ExtractionSpan(BaseModel):
     def __init__(self, json):
         super().__init__(json)
 
     @property
-    def text(self):
-        return self.json().get('text')
+    def start(self):
+        return self.json().get('start')
 
     @property
-    def spans(self):
-        spans = self.json().get('spans')
-        _e = []
-        if spans:
-            for _extraction in spans:
-                _e.append(ExtractionSpan(_extraction))
-        return _e
+    def end(self):
+        return self.json().get('end')
+
+    @property
+    def page_start(self):
+        return self.json().get('pages').get('start')
+
+    @property
+    def page_end(self):
+        return self.json().get('pages').get('end')
+
+    @property
+    def top(self):
+        return self.json().get('bounds').get('top')
+
+    @property
+    def left(self):
+        return self.json().get('bounds').get('left')
+
+    @property
+    def bottom(self):
+        return self.json().get('bounds').get('bottom')
+
+    @property
+    def right(self):
+        return self.json().get('bounds').get('right')
