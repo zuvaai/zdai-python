@@ -12,45 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
+from dataclasses import dataclass
 
 
-class Field(BaseModel):
-    def __init__(self, json):
-        super().__init__(json)
+@dataclass
+class Field:
+    """
+    Field dataclass to store the field properties
+    """
+    id: str
+    name: str
+    description: str
+    bias: float
+    f_score: float
+    precision: float
+    recall: float
+    document_count: int
+    is_custom: bool
 
-    @property
-    def id(self) -> str:
-        return self.json().get('field_id')
-
-    @property
-    def name(self) -> str:
-        return self.json().get('name')
-
-    @property
-    def description(self) -> str:
-        return self.json().get('description')
-
-    @property
-    def bias(self) -> float:
-        return float(self.json().get('bias'))
-
-    @property
-    def fscore(self) -> float:
-        return float(self.json().get('f_score'))
-
-    @property
-    def precision(self) -> float:
-        return float(self.json().get('precision'))
-
-    @property
-    def recall(self) -> float:
-        return float(self.json().get('recall'))
-
-    @property
-    def document_count(self) -> int:
-        return int(self.json().get('document_count'))
-
-    @property
-    def is_custom(self):
-        return bool(self.json().get('is_custom'))
