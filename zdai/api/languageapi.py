@@ -15,7 +15,7 @@
 from typing import List, Tuple
 
 from ..api.apicall import ApiCall
-from ..models.language import Language
+from ..models.language_classification_request import LanguageClassificationRequest
 
 
 class LanguageAPI(object):
@@ -26,7 +26,7 @@ class LanguageAPI(object):
     def __init__(self, token: str, url: str):
         self._call = ApiCall(token, url)
 
-    def create(self, file_ids: List[str]) -> Tuple[List[Language], ApiCall]:
+    def create(self, file_ids: List[str]) -> Tuple[List[LanguageClassificationRequest], ApiCall]:
         """
         Creates a new Language request for the file ids provided.
 
@@ -36,9 +36,9 @@ class LanguageAPI(object):
         caller.add_body(key = 'file_ids', value = file_ids)
         caller.send()
 
-        return [Language(json = c) for c in caller.response.json().get('file_ids')], caller
+        return [LanguageClassificationRequest(api = self, json = c) for c in caller.response.json().get('file_ids')], caller
 
-    def get(self, request_id: str) -> Tuple[Language, ApiCall]:
+    def get(self, request_id: str) -> Tuple[LanguageClassificationRequest, ApiCall]:
         """
         Gets the Language data for the request_id.
 
@@ -47,4 +47,4 @@ class LanguageAPI(object):
         caller = self._call.new(method = 'GET', path = f'language/{request_id}')
         caller.send()
 
-        return Language(json = caller.response.json()), caller
+        return LanguageClassificationRequest(api = self, json = caller.response.json()), caller
