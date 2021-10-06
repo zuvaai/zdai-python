@@ -109,12 +109,9 @@ extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].reques
 # Only successful if the extraction_status.status is complete or failed
 results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].request_id)
 
-# To parse out the results
-for result in results.fields:
-    for extraction in result.extractions:
-        for span in extraction.spans:
-            print(f'{result.field_id} was found on pages {span.page_start} to {span.page_end}, '
-                  f'at locations top: {span.top}, left: {span.bottom}, bottom: {span.bottom}, right: {span.right}')
+for result in results:
+    print(result)
+
 ```
 
 Note that the above accepts a list of ```file_ids``` and a list of ```field_ids```.
