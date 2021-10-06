@@ -12,29 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
+from .baserequest import BaseRequest
 
 
-class OCR(BaseModel):
-    def __init__(self, json):
-        super().__init__(json)
+class FieldExtractionRequest(BaseRequest):
+    """
+    The class used for requests created in the Field Extraction service
+    """
+    def __init__(self, api, json):
+        super().__init__(api = api, json = json)
 
-    @property
-    def request_id(self):
-        return self.json().get('request_id')
+    def get_results(self):
+        data = self.api().get_result(request_id = self.id())[0]
 
-    @property
-    def file_id(self):
-        return self.json().get('file_id')
-
-    @property
-    def status(self):
-        return self.json().get('status')
-
-    @property
-    def error(self):
-        return self.json().get('error')
-
-    @property
-    def text(self):
-        return self.json().get('text')
+        return data

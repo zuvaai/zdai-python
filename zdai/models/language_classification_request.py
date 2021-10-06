@@ -12,24 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
-from .extractionresult import ExtractionResult
+from .baserequest import BaseRequest
 
 
-class ExtractionField(BaseModel):
-    def __init__(self, json):
-        super().__init__(json)
+class LanguageClassificationRequest(BaseRequest):
+    def __init__(self, api, json):
+        super().__init__(api = api, json = json)
 
-    @property
-    def field_id(self):
-        return self.json().get('field_id', None)
-
-    @property
-    def extractions(self):
-        extractions = self.json().get('extractions', None)
-        _e = []
-        if extractions:
-            for _extraction in extractions:
-                _e.append(ExtractionResult(_extraction))
-
-        return _e
+    def language(self):
+        return self.json().get('language')

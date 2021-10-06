@@ -44,8 +44,6 @@ class ApiCallBadRequestError(ApiCallError):
     def __init__(self, call):
         self.call = call
         self.error_code, self.error_message = _get_error_data(call.response.content)
-        # self.error_code = json.loads(call.response.content).get('error').get('code')
-        # self.error_message = json.loads(call.response.content).get('error').get('message')
         self.formatted_message = f'Bad Request: {self.error_code}: {self.error_message}'
         super().__init__(call)
 
@@ -54,8 +52,6 @@ class ApiCallForbiddenError(ApiCallError):
     def __init__(self, call):
         self.call = call
         self.error_code, self.error_message = _get_error_data(call.response.content)
-        # self.error_code = json.loads(call.response.content).get('error').get('code')
-        # self.error_message = json.loads(call.response.content).get('error').get('message')
         self.formatted_message = f'Forbidden: {self.error_code}: {self.error_message}'
         super().__init__(call)
 
@@ -72,8 +68,6 @@ class ApiCallConflictError(ApiCallError):
     def __init__(self, call):
         self.call = call
         self.error_code, self.error_message = _get_error_data(call.response.content)
-        # self.error_code = json.loads(call.response.content).get('error').get('code')
-        # self.error_message = json.loads(call.response.content).get('error').get('message')
         self.formatted_message = f'Conflict: {self.error_code}: {self.error_message}'
         super().__init__(call)
 
@@ -82,10 +76,9 @@ class ApiCallInternalServerError(ApiCallError):
     def __init__(self, call):
         self.call = call
         self.error_code, self.error_message = _get_error_data(call.response.content)
-        # self.error_code = json.loads(call.response.content).get('code')
-        # self.error_message = json.loads(call.response.content).get('message')
         self.formatted_message = f'Internal Server Error: {self.error_code}: {self.error_message}'
         super().__init__(call)
+
 
 class ApiNoTokenError(Exception):
     def __init__(self):

@@ -15,6 +15,7 @@
 from ..api.apicall import ApiCall
 from ..models.file import File
 from typing import Tuple
+from datetime import datetime
 
 
 class FileAPI(object):
@@ -40,7 +41,16 @@ class FileAPI(object):
         caller.set_body_value(value = content)
         caller.send()
 
-        return File(json = caller.response.json()), caller
+        data = caller.response.json()
+
+        file = File(
+            id = data.get('file_id'),
+            content_type = data.get('attributes').get('content-type'),
+            expiration = datetime.strptime(data.get('expiration'), '%Y-%m-%dT%H:%M:%SZ')
+        )
+
+
+        return file, caller
 
     def delete(self, file_id: int) -> Tuple[bool, ApiCall]:
         """

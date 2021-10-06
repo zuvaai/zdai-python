@@ -36,4 +36,18 @@ class FieldAPI(object):
         caller = self._call.new(method = 'GET', path = 'fields')
         caller.send()
 
-        return [Field(json = f) for f in caller.response.json()], caller
+        fields = []
+        for field in caller.response.json():
+            fields.append(Field(
+                id = str(field.get('field_id')),
+                name = str(field.get('name')),
+                description = str(field.get('description')),
+                bias = float(field.get('bias')),
+                f_score = float(field.get('f_score')),
+                precision = float(field.get('precision')),
+                recall = float(field.get('recall')),
+                document_count = int(field.get('document_count')),
+                is_custom = bool(field.get('is_custom'))
+            ))
+
+        return fields, caller

@@ -12,21 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass
+from .baserequest import BaseRequest
 
 
-@dataclass
-class Field:
+class DocumentClassificationRequest(BaseRequest):
     """
-    Field dataclass to store the field properties
+    The class used for requests created in the Document Classification service
     """
-    id: str
-    name: str
-    description: str
-    bias: float
-    f_score: float
-    precision: float
-    recall: float
-    document_count: int
-    is_custom: bool
+    def __init__(self, api, json):
+        super().__init__(api = api, json = json)
 
+    def is_contract(self):
+        """
+        Returns whether or not the document is a contract
+        """
+        return self.json().get('is_contract')
+
+    def classification(self):
+        """
+        Returns the type of document that was provided
+        """
+        return self.json().get('classification')

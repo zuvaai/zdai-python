@@ -107,7 +107,11 @@ extraction_jobs, _ = sdk.extraction.create(file_ids = [file.id], field_ids = ['<
 extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].request_id)
 
 # Only successful if the extraction_status.status is complete or failed
-extraction_results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].request_id)
+results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].request_id)
+
+for result in results:
+    print(result)
+
 ```
 
 Note that the above accepts a list of ```file_ids``` and a list of ```field_ids```.
@@ -142,34 +146,48 @@ you can obtain the ZDAI response by using ```file.json()``` which will show what
 
 # Examples
 
-## Obtain a file's Classification
+## How to obtain a document's text, document classification, language and field extractions
 
 ```python
-from zdai import ZDAISDK
+from zdai import ZDAISDK, DocumentClassificationRequest, LanguageClassificationRequest, OCRRequest, FieldExtractionRequest
 import time
 
 sdk = ZDAISDK(from_config = True)
 
-with open('file_zones/upload_files/...', 'rb') as f:
-    file, _ = sdk.file.create(content = f.read())
+fields = sdk.fields.get()[0]
 
-print(f'Created file as {file.id}')
+with open('path/to/file.ext', 'rb') as f:
+    file, _ = sdk.file.create(content=f.read())
 
-jobs, _ = sdk.classification.create(file_ids = [file.id])
+print(f'Created {file.id}')
 
-while len(jobs) > 0:
-    for job in jobs:
-        latest, _ = sdk.classification.get(request_id = job.request_id)
+field_names = ['Title', 'Parties', 'Date', 'Governing Law', 'Indemnity']
 
-        print(f'Job {job.request_id} is {latest.status}')
+requests = []
+requests.extend(sdk.ocr.create(file_ids = [file.id])[0])
+requests.extend(sdk.classification.create(file_ids = [file.id])[0])
+requests.extend(sdk.language.create(file_ids = [file.id])[0])
+requests.extend(sdk.extraction.create(file_ids = [file.id], field_ids = [f.id for f in fields if f.name in field_names])[0])
 
-        if not latest.is_done():
-            continue
 
-        print(f'Classification: {latest.classification}')
-        jobs.remove(job)
+while len(requests) > 0:
+    for request in requests:
+        print(request.type(), request.id(), request.status())
+        request.update()
+        if request.is_finished():
+            if request.is_type(OCRRequest):
+                text = request.get_text()
+                print(f'Finished: {text[0:50]}')
+            elif request.is_type(DocumentClassificationRequest):
+                print(f'Finished: {request.classification()}, {request.is_contract()}')
+            elif request.is_type(LanguageClassificationRequest):
+                print(f'Finished: {request.language()}')
+            elif request.is_type(FieldExtractionRequest):
+                for result in request.get_results():
+                    print(result.field_id, result.text)
 
-    time.sleep(1)
+            requests.remove(request)
+    time.sleep(2)
 ```
 
 ## Obtain a newly-submitted file's ID

@@ -12,25 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
+from .baserequest import BaseRequest
 
 
-class Language(BaseModel):
-    def __init__(self, json):
-        super().__init__(json)
+class OCRRequest(BaseRequest):
+    def __init__(self, api, json):
+        super().__init__(api = api, json = json)
 
-    @property
-    def request_id(self):
-        return self.json().get('request_id')
+    def get_text(self):
+        result, _ = self.api().get_text(request_id = self.id())
+        return result.get('text')
 
-    @property
-    def file_id(self):
-        return self.json().get('file_id')
-
-    @property
-    def status(self):
-        return self.json().get('status')
-
-    @property
-    def language(self):
-        return self.json().get('language')
+    def get_images(self):
+        data = self.api().get_images(request_id = self.id())
+        return data

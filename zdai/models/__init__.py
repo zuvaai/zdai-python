@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
-from .classification import Classification
-from .extraction import Extraction
-from .extractionfield import ExtractionField
-from .extractionresult import ExtractionResult
-from .extractionstatus import ExtractionStatus
+
 from .field import Field
 from .file import File
-from .language import Language
-from .ocr import OCR
+from .language_classification_request import LanguageClassificationRequest
+from .document_classification_request import DocumentClassificationRequest
+from .field_extraction_request import FieldExtractionRequest
+from .ocr_request import OCRRequest
