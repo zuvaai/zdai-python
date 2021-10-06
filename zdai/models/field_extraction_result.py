@@ -12,17 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .basemodel import BaseModel
+from dataclasses import dataclass
 
 
-class ExtractionStatus(BaseModel):
-    def __init__(self, json):
-        super().__init__(json)
-
-    @property
-    def request_id(self):
-        return self.json().get('request_id')
-
-    @property
-    def status(self):
-        return self.json().get('status')
+@dataclass
+class FieldExtractionResult:
+    """
+    Dataclass to store the properties associated with a field extraction result
+    """
+    field_id: str = None
+    text: str = None
+    page_start: int = None
+    page_end: int = None
+    top: int = None
+    left: int = None
+    bottom: int = None
+    right: int = None
