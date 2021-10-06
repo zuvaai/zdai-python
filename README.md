@@ -86,7 +86,7 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 classification_jobs, _ = sdk.classification.create(file_ids = [file.id])
-classification_status, _ = sdk.classification.get(request_id = classification_jobs[0].request_id)
+classification_status, _ = sdk.classification.get(request_id = classification_jobs[0].id())
 ```
 
 Note that the above accepts a list of ```file_ids```.
@@ -104,10 +104,10 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 extraction_jobs, _ = sdk.extraction.create(file_ids = [file.id], field_ids = ['<field_id>', '<field_id>'])
-extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].request_id)
+extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].id())
 
 # Only successful if the extraction_status.status is complete or failed
-results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].request_id)
+results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].id())
 
 for result in results:
     print(result)
@@ -129,20 +129,10 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 language_jobs, _ = sdk.language.create(file_ids = [file.id])
-language, _ = sdk.language.get(request_id = language_jobs[0].request_id)
+language, _ = sdk.language.get(request_id = language_jobs[0].id())
 ```
 
 Note that the above accepts a list of ```fild_ids```
-
-# Models
-
-The ZDAI wrapper returns instances of the data model associated with the action that took place.  
-These models are listed above in the ```/models``` folder.
-
-The data models are what allow you to easily reference the data that come back from the ZDAI API.
-
-The above acts as a layer of abstraction on top of the JSON that came back from ZDAI. Using the above example,  
-you can obtain the ZDAI response by using ```file.json()``` which will show what ZDAI responded with.
 
 # Examples
 
