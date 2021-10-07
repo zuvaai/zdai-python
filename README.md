@@ -1,4 +1,4 @@
-# Zuva Document AI (ZDAI) Python Wrapper
+# Zuva DocAI (ZDAI) Python Wrapper
 
 # Wrapper
 
