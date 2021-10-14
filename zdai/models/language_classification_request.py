@@ -19,5 +19,6 @@ class LanguageClassificationRequest(BaseRequest):
     def __init__(self, api, json):
         super().__init__(api = api, json = json)
 
+    @property
     def language(self):
         return self.json().get('language')

@@ -21,6 +21,35 @@ class BaseRequest:
         self._api = api
         self._json = json
 
+    @property
+    def type(self):
+        """
+        Returns the name of the class
+        """
+        return self._type.__name__
+
+    @property
+    def id(self):
+        """
+        Returns the request identifier
+        """
+        return self._json.get('request_id')
+
+    @property
+    def file_id(self):
+        """
+        Returns the file_id associated with the request
+        """
+        return self._json.get('file_id')
+
+    @property
+    def status(self):
+        """
+        Returns the status of the request
+        This is only updated when the update() is run, or set_json() is used
+        """
+        return self._json.get('status')
+
     def json(self):
         """
         Returns the raw json of the request
@@ -33,37 +62,6 @@ class BaseRequest:
         For example: ClassificationAPI, LanguageAPI, OCIAPI, ExtractionAPI
         """
         return self._api
-
-    def set_json(self, json):
-        """
-        Sets the request object instance's json
-        """
-        self._json = json
-
-    def type(self):
-        """
-        Returns the name of the class
-        """
-        return self._type.__name__
-
-    def id(self):
-        """
-        Returns the request identifier
-        """
-        return self._json.get('request_id')
-
-    def file_id(self):
-        """
-        Returns the file_id associated with the request
-        """
-        return self._json.get('file_id')
-
-    def status(self):
-        """
-        Returns the status of the request
-        This is only updated when the update() is run, or set_json() is used
-        """
-        return self._json.get('status')
 
     def is_type(self, request_type):
         """
@@ -79,35 +77,35 @@ class BaseRequest:
         """
         Returns whether or not the request completed processing
         """
-        return self.status() in ['complete', 'failed']
+        return self.status in ['complete', 'failed']
 
     def is_successful(self):
         """
         Returns whether or not the request has completed successfully
         """
-        return self.status() == 'complete'
+        return self.status == 'complete'
 
     def is_failed(self):
         """
         Returns whether or not the request has completed unsuccessfully
         """
-        return self.status() == 'failed'
+        return self.status == 'failed'
 
     def is_processing(self):
         """
         Returns whether or not the request is still processing
         """
-        return self.status() == 'processing'
+        return self.status == 'processing'
 
     def is_queued(self):
         """
         Returns whether or not the request is queued
         """
-        return self.status() == 'queued'
+        return self.status == 'queued'
 
     def update(self):
         """
         Updates the request with its latest status
         """
-        latest, _ = self.api().get(request_id = self.id())
-        self.set_json(json = latest.json())
+        latest, call = self.api().get(request_id = self.id)
+        self._json = latest.json()

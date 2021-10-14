@@ -22,12 +22,14 @@ class DocumentClassificationRequest(BaseRequest):
     def __init__(self, api, json):
         super().__init__(api = api, json = json)
 
+    @property
     def is_contract(self):
         """
         Returns whether or not the document is a contract
         """
         return self.json().get('is_contract')
 
+    @property
     def classification(self):
         """
         Returns the type of document that was provided
