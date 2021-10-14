@@ -23,6 +23,6 @@ class FieldExtractionRequest(BaseRequest):
         super().__init__(api = api, json = json)
 
     def get_results(self):
-        data = self.api().get_result(request_id = self.id())[0]
+        data, _ = self.api().get_result(request_id = self.id)
 
         return data

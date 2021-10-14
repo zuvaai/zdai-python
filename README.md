@@ -86,7 +86,7 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 classification_jobs, _ = sdk.classification.create(file_ids = [file.id])
-classification_status, _ = sdk.classification.get(request_id = classification_jobs[0].id())
+classification_status, _ = sdk.classification.get(request_id = classification_jobs[0].id)
 ```
 
 Note that the above accepts a list of ```file_ids```.
@@ -104,10 +104,10 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 extraction_jobs, _ = sdk.extraction.create(file_ids = [file.id], field_ids = ['<field_id>', '<field_id>'])
-extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].id())
+extraction_status, _ = sdk.extraction.get(request_id = extraction_jobs[0].id)
 
 # Only successful if the extraction_status.status is complete or failed
-results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].id())
+results, _ = sdk.extraction.get_result(request_id = extraction_jobs[0].id)
 
 for result in results:
     print(result)
@@ -129,7 +129,7 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content = f.read())
 
 language_jobs, _ = sdk.language.create(file_ids = [file.id])
-language, _ = sdk.language.get(request_id = language_jobs[0].id())
+language, _ = sdk.language.get(request_id = language_jobs[0].id)
 ```
 
 Note that the above accepts a list of ```fild_ids```
@@ -162,16 +162,16 @@ requests.extend(sdk.extraction.create(file_ids = [file.id], field_ids = [f.id fo
 
 while len(requests) > 0:
     for request in requests:
-        print(request.type(), request.id(), request.status())
+        print(request.type, request.id, request.status)
         request.update()
         if request.is_finished():
             if request.is_type(OCRRequest):
                 text = request.get_text()
                 print(f'Finished: {text[0:50]}')
             elif request.is_type(DocumentClassificationRequest):
-                print(f'Finished: {request.classification()}, {request.is_contract()}')
+                print(f'Finished: {request.classification}, {request.is_contract}')
             elif request.is_type(LanguageClassificationRequest):
-                print(f'Finished: {request.language()}')
+                print(f'Finished: {request.language}')
             elif request.is_type(FieldExtractionRequest):
                 for result in request.get_results():
                     print(result.field_id, result.text)

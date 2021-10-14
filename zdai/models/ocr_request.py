@@ -20,9 +20,9 @@ class OCRRequest(BaseRequest):
         super().__init__(api = api, json = json)
 
     def get_text(self):
-        result, _ = self.api().get_text(request_id = self.id())
+        result, _ = self.api().get_text(request_id = self.id)
         return result.get('text')
 
     def get_images(self):
-        data = self.api().get_images(request_id = self.id())
+        data = self.api().get_images(request_id = self.id)
         return data
