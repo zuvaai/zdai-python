@@ -78,6 +78,8 @@ class ExtractionAPI(object):
                     results.append(FieldExtractionResult(
                         field_id = result.field_id,
                         text = extraction.text,
+                        text_start = span.start,
+                        text_end = span.end,
                         page_start = span.pages.start,
                         page_end = span.pages.end,
                         top = span.bounds.top,

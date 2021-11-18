@@ -22,6 +22,8 @@ class FieldExtractionResult:
     """
     field_id: str = None
     text: str = None
+    text_start: int = None
+    text_end: int = None
     page_start: int = None
     page_end: int = None
     top: int = None
