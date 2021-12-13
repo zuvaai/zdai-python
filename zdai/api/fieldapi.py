@@ -13,9 +13,11 @@
 # limitations under the License.
 
 from typing import List, Tuple
+from dataclasses import dataclass
 
 from ..api.apicall import ApiCall
 from ..models.field import Field
+from ..models.field_training_request import FieldTrainingRequest
 
 
 class FieldAPI(object):
@@ -25,6 +27,62 @@ class FieldAPI(object):
 
     def __init__(self, token: str, url: str):
         self._call = ApiCall(token, url)
+
+    def create(self, field_name: str, description: str = None, from_field_id: str = None) -> Tuple[str, ApiCall]:
+        """
+        Creates a new field
+        """
+        caller = self._call.new(method = 'POST', path = 'fields')
+        caller.add_body(key = 'field_name', value = field_name)
+
+        if description:
+            caller.add_body(key = 'description', value = description)
+
+        if from_field_id:
+            caller.add_body(key = 'from_field_id', value = from_field_id)
+
+        caller.send()
+
+        return caller.response.json().get('field_id'), caller
+
+    def train(self, field_id: int, annotations: List[dict]):
+        """
+        Creates a field training  for the annotations provided.
+
+        Annotations are provided in the following format:
+
+            [
+                {
+                    "file_id": "",
+                    "locations": [
+                        {
+                            "start": 0,
+                            "end": 1
+                        },
+                        {
+                            "start": 2,
+                            "end": 3
+                        }
+                    ]
+                }
+            ]
+
+        """
+        caller = self._call.new(method = 'POST', path = f'fields/{field_id}/train')
+        caller.set_body_value(annotations)
+        caller.send()
+
+        return FieldTrainingRequest(api = self, json = caller.response.json()), caller
+
+    def get_training_status(self, field_id: int, request_id: int):
+        """
+
+        """
+        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/train/{request_id}')
+        caller.send()
+
+        return FieldTrainingRequest(api = self, json = caller.response.json()), caller
+
 
     def get(self) -> Tuple[List[Field], ApiCall]:
         """
@@ -51,3 +109,61 @@ class FieldAPI(object):
             ))
 
         return fields, caller
+
+    def get_metadata(self, field_id: int):
+        """
+
+        """
+
+        @dataclass
+        class FieldMetadata:
+            field_id: str
+            name: str
+            description: str
+            is_trained: bool
+            read_only: bool
+            file_ids: List[str]
+            status: str
+
+        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/metadata')
+        caller.send()
+
+        return FieldMetadata(**caller.response.json()), caller
+
+    def update_metadata(self, field_id: str, name: str, description: str):
+        """
+
+        """
+        caller = self._call.new(method = 'PUT', path = f'fields/{field_id}/metadata')
+        caller.add_body(key = 'name', value = name)
+        caller.add_body(key = 'description', value = description)
+        caller.send()
+
+        return caller.response.status_code == 204, caller
+
+    def get_accuracy(self, field_id: str):
+        """
+
+        """
+
+        @dataclass
+        class FieldAccuracy:
+            field_id: str
+            precision: float
+            recall: float
+            fscore: float
+
+        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/accuracy')
+        caller.send()
+
+        return FieldAccuracy(**caller.response.json()), caller
+
+    def get_layout(self, field_id: str):
+        """
+
+        """
+
+        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/layout')
+        caller.send()
+
+        return caller

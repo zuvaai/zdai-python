@@ -18,4 +18,5 @@ from .file import File
 from .language_classification_request import LanguageClassificationRequest
 from .document_classification_request import DocumentClassificationRequest
 from .field_extraction_request import FieldExtractionRequest
+from .field_training_request import FieldTrainingRequest
 from .ocr_request import OCRRequest
