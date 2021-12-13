@@ -45,7 +45,7 @@ class FieldAPI(object):
 
         return caller.response.json().get('field_id'), caller
 
-    def train(self, field_id: int, annotations: List[dict]):
+    def train(self, field_id: str, annotations: List[dict]):
         """
         Creates a field training  for the annotations provided.
 
@@ -74,22 +74,19 @@ class FieldAPI(object):
 
         return FieldTrainingRequest(api = self, json = caller.response.json()), caller
 
-    def get_training_status(self, field_id: int, request_id: int):
+    def get_training_status(self, field_id: str, request_id: int):
         """
-
+        Obtain the latest status of the Field Training Request
         """
         caller = self._call.new(method = 'GET', path = f'fields/{field_id}/train/{request_id}')
         caller.send()
 
         return FieldTrainingRequest(api = self, json = caller.response.json()), caller
 
-
     def get(self) -> Tuple[List[Field], ApiCall]:
         """
         Gets the list of fields that exist in the ZDAI, which
         the API token has access to.
-
-        :return:
         """
         caller = self._call.new(method = 'GET', path = 'fields')
         caller.send()
@@ -112,7 +109,7 @@ class FieldAPI(object):
 
     def get_metadata(self, field_id: int):
         """
-
+        Gets the field's metadata
         """
 
         @dataclass
@@ -132,7 +129,7 @@ class FieldAPI(object):
 
     def update_metadata(self, field_id: str, name: str, description: str):
         """
-
+        Updates the field's metadata
         """
         caller = self._call.new(method = 'PUT', path = f'fields/{field_id}/metadata')
         caller.add_body(key = 'name', value = name)
@@ -143,7 +140,7 @@ class FieldAPI(object):
 
     def get_accuracy(self, field_id: str):
         """
-
+        Gets the field's accuracy (precision, recall, fscore)
         """
 
         @dataclass
@@ -160,7 +157,7 @@ class FieldAPI(object):
 
     def get_layout(self, field_id: str):
         """
-
+        Gets the field's protobuf layout
         """
 
         caller = self._call.new(method = 'GET', path = f'fields/{field_id}/layout')
