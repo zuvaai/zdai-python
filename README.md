@@ -125,13 +125,13 @@ from zdai import ZDAISDK
 
 sdk = ZDAISDK(from_config = True)
 
-new_field_id, _ = sdk.fields.create(field_name = 'test1', description = 'descritpion')
+new_field_id, _ = sdk.fields.create(field_name = 'test', description = 'description')
 
 with open('file_zones/upload_files/...', 'rb') as f:
-    file1, _ = sdk.file.create(content = f.read())
+    file, _ = sdk.file.create(content = f.read())
 
 training_locations = [{"start": 0, "end": 110}]
-training_annotations = [{"file_id": file1, "locations": training_locations}]
+training_annotations = [{"file_id": file.id, "locations": training_locations}]
 
 training_request_id = sdk.fields.train(field_id = new_field_id, annotations = training_annotations)
 
