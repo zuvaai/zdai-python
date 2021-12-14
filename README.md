@@ -122,24 +122,22 @@ To create a training request for a field, as well as obtain the request's status
 
 ```python
 from zdai import ZDAISDK
+from zdai import CustomFieldTrainer
 
 sdk = ZDAISDK(from_config = True)
+custom_field = CustomFieldTrainer(sdk = sdk, name = 'customfieldname')
 
-new_field_id, _ = sdk.fields.create(field_name = 'test', description = 'description')
-
+custom_field.create_empty()
 with open('file_zones/upload_files/...', 'rb') as f:
-    file, _ = sdk.file.create(content = f.read())
+    file, _ = sdk.file.create(content= f.read())
+custom_field.add_annotation(file_id = file.id, start = 100, end = 150)
+custom_field.add_annotation(file_id = file.id, start = 500, end = 550)
+custom_field.train()
 
-training_locations = [{"start": 0, "end": 110}]
-training_annotations = [{"file_id": file.id, "locations": training_locations}]
-
-training_request_id = sdk.fields.train(field_id = new_field_id, annotations = training_annotations)
-
-training_status, _ = sdk.fields.get_training_status(field_id = new_field_id, request_id = training_request_id)
-
-training_accuracy, _ = sdk.fields.get_accuracy(field_id = new_field_id)
-
-validation_details, _, _ = sdk.fields.get_validation_details(field_id = new_field_id)
+print(custom_field.get_accuracy())
+print(custom_field.get_validation_details())
+print(custom_field.get_layout())
+print(custom_field.get_metadata())
 
 ```
 

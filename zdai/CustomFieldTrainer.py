@@ -2,7 +2,7 @@ from zdai import ZDAISDK
 import time
 
 
-class CustomFieldTrainer:
+class CustomFieldTrainer(object):
     """
     The CustomFieldTrainer class can be used to create new custom fields using the DocAI
     Training APIs.
@@ -110,3 +110,9 @@ class CustomFieldTrainer:
         Get the custom field's validation details
         """
         return self.sdk().fields.get_validation_details(field_id = self.field_id)
+
+    def get_metadata(self):
+        """
+        Get the custom field's metadata
+        """
+        return self.sdk().fields.get_metadata(field_id = self.field_id)
