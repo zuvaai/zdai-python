@@ -15,6 +15,9 @@ class CustomFieldTrainer:
         custom_field.add_annotation(file_id = 'abc', start = 500, end = 550)
         custom_field.train()
         print(custom_field.get_accuracy())
+        print(custom_field.get_validation_details())
+        print(custom_field.get_layout())
+        print(custom_field.get_metadata())
     """
     def __init__(self, sdk: ZDAISDK, name: str, field_id: str = None):
         self.name = name
@@ -101,3 +104,9 @@ class CustomFieldTrainer:
         Get the custom field's protobuf layout
         """
         return self.sdk().fields.get_layout(field_id = self.field_id)
+
+    def get_validation_details(self):
+        """
+        Get the custom field's validation details
+        """
+        return self.sdk().fields.get_validation_details(field_id = self.field_id)

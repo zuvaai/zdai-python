@@ -116,6 +116,35 @@ for result in results:
 
 Note that the above accepts a list of ```file_ids``` and a list of ```field_ids```.
 
+## Training
+
+To create a training request for a field, as well as obtain the request's status and accuracy and validation details:
+
+```python
+from zdai import ZDAISDK
+
+sdk = ZDAISDK(from_config = True)
+
+new_field_id, _ = sdk.fields.create(field_name = 'test1', description = 'descritpion')
+
+with open('file_zones/upload_files/...', 'rb') as f:
+    file1, _ = sdk.file.create(content = f.read())
+
+training_locations = [{"start": 0, "end": 110}]
+training_annotations = [{"file_id": file1, "locations": training_locations}]
+
+training_request_id = sdk.fields.train(field_id = new_field_id, annotations = training_annotations)
+
+training_status, _ = sdk.fields.get_training_status(field_id = new_field_id, request_id = training_request_id)
+
+training_accuracy, _ = sdk.fields.get_accuracy(field_id = new_field_id)
+
+validation_details, _, _ = sdk.fields.get_validation_details(field_id = new_field_id)
+
+```
+
+Note that at least 30 files are needed for well trained fields.
+
 ## Language
 
 To create an language request on a file, as well as obtain the request's status:
