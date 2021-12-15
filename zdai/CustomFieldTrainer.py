@@ -53,16 +53,27 @@ class CustomFieldTrainer(object):
         Add a start and end character range that belongs to a file_id.
         This range will be used during training.
         """
+        def exists(file_id):
+            return any([a for a in self.annotations if a.get('file_id') == file_id])
+
         def add(file_id: str, start: int, end: int):
-            self.annotations.append({
-                "file_id": file_id,
-                "locations": [
-                    {
-                        "start": start,
-                        "end": end
-                    }
-                ]
-            })
+            if not exists(file_id):
+                self.annotations.append({
+                    "file_id": file_id,
+                    "locations": [
+                        {
+                            "start": start,
+                            "end": end
+                        }
+                    ]
+                })
+            else:
+                for annotation in self.annotations:
+                    if annotation.get('file_id') == file_id:
+                        annotation.get('locations').append({
+                            "start": start,
+                            "end": end
+                        })
 
         add(file_id, start, end)
 
