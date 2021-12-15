@@ -17,7 +17,6 @@ class CustomFieldTrainer(object):
         custom_field.train()
         print(custom_field.get_accuracy())
         print(custom_field.get_validation_details())
-        print(custom_field.get_layout())
         print(custom_field.get_metadata())
     """
     def __init__(self, sdk: ZDAISDK, name: str, field_id: str = None):
