@@ -1,8 +1,9 @@
 from zdai import ZDAISDK
 import time
+import json
 
 
-class CustomFieldTrainer:
+class CustomFieldTrainer(object):
     """
     The CustomFieldTrainer class can be used to create new custom fields using the DocAI
     Training APIs.
@@ -15,6 +16,8 @@ class CustomFieldTrainer:
         custom_field.add_annotation(file_id = 'abc', start = 500, end = 550)
         custom_field.train()
         print(custom_field.get_accuracy())
+        print(custom_field.get_validation_details())
+        print(custom_field.get_metadata())
     """
     def __init__(self, sdk: ZDAISDK, name: str, field_id: str = None):
         self.name = name
@@ -78,11 +81,12 @@ class CustomFieldTrainer:
         """
         Creates a new training request using the annotations
         """
-        request, _ = self.sdk().fields.train(field_id = self.field_id, annotations = self.annotations)
+        json_annotation = json.dumps(self.annotations)
+        request, _ = self.sdk().fields.train(field_id = self.field_id, annotations = json_annotation)
 
         while True:
             latest = request.update()
-            print(f'{latest.type} is {latest.status}')
+            print(f'{latest.get("request_id")} is {latest.get("status")}')
 
             if request.is_finished():
                 break
@@ -96,8 +100,16 @@ class CustomFieldTrainer:
         accuracy, _ = self.sdk().fields.get_accuracy(field_id = self.field_id)
         return accuracy
 
-    def get_layout(self):
+    def get_validation_details(self):
         """
-        Get the custom field's protobuf layout
+        Get the custom field's validation details
         """
-        return self.sdk().fields.get_layout(field_id = self.field_id)
+        validation_details, _ = self.sdk().fields.get_validation_details(field_id = self.field_id)
+        return validation_details
+
+    def get_metadata(self):
+        """
+        Get the custom field's metadata
+        """
+        metadata, _ = self.sdk().fields.get_metadata(field_id = self.field_id)
+        return metadata

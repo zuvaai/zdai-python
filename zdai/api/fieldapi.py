@@ -13,10 +13,10 @@
 # limitations under the License.
 
 from typing import List, Tuple
-from dataclasses import dataclass
 
 from ..api.apicall import ApiCall
 from ..models.field import Field
+from ..models.field_training import FieldValidationLocation, FieldValidationDetails, FieldMetadata, FieldAccuracy
 from ..models.field_training_request import FieldTrainingRequest
 
 
@@ -107,20 +107,10 @@ class FieldAPI(object):
 
         return fields, caller
 
-    def get_metadata(self, field_id: int):
+    def get_metadata(self, field_id: str):
         """
         Gets the field's metadata
         """
-
-        @dataclass
-        class FieldMetadata:
-            field_id: str
-            name: str
-            description: str
-            is_trained: bool
-            read_only: bool
-            file_ids: List[str]
-            status: str
 
         caller = self._call.new(method = 'GET', path = f'fields/{field_id}/metadata')
         caller.send()
@@ -131,6 +121,7 @@ class FieldAPI(object):
         """
         Updates the field's metadata
         """
+
         caller = self._call.new(method = 'PUT', path = f'fields/{field_id}/metadata')
         caller.add_body(key = 'name', value = name)
         caller.add_body(key = 'description', value = description)
@@ -143,24 +134,30 @@ class FieldAPI(object):
         Gets the field's accuracy (precision, recall, fscore)
         """
 
-        @dataclass
-        class FieldAccuracy:
-            field_id: str
-            precision: float
-            recall: float
-            fscore: float
-
         caller = self._call.new(method = 'GET', path = f'fields/{field_id}/accuracy')
         caller.send()
 
         return FieldAccuracy(**caller.response.json()), caller
 
-    def get_layout(self, field_id: str):
+    def get_validation_details(self, field_id: str):
         """
-        Gets the field's protobuf layout
+        Gets the field's validation details (type of instance (true positive, false positive, false negative) & location)
         """
 
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/layout')
+        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/validation-details')
         caller.send()
 
-        return caller
+        response = caller.response.json()
+        validation_details = []
+
+        for validation_detail in response:
+            location = FieldValidationLocation(character_start = validation_detail.get('location')[0],
+                                               character_end = validation_detail.get('location')[1])
+
+            v = FieldValidationDetails(file_id = validation_detail.get('file_id'),
+                                       type = validation_detail.get('type'),
+                                       location = location)
+
+            validation_details.append(v)
+
+        return validation_details, caller

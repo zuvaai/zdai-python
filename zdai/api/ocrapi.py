@@ -26,7 +26,7 @@ class OCRAPI(object):
     def __init__(self, token: str, url: str):
         self._call = ApiCall(token, url)
 
-    def create(self, file_ids: List[str]) -> Tuple[List[OCRRequest], ApiCall]:
+    def create(self, file_ids: List[str], generate_layout: bool = False) -> Tuple[List[OCRRequest], ApiCall]:
         """
         Creates a new OCR request for the file ids provided.
 
@@ -34,6 +34,7 @@ class OCRAPI(object):
         """
         caller = self._call.new(method = 'POST', path = 'ocr')
         caller.add_body(key = 'file_ids', value = file_ids)
+        caller.add_body(key = 'layout', value = generate_layout)
         caller.send()
 
         return [OCRRequest(api = self, json = c) for c in caller.response.json().get('file_ids')], caller
@@ -67,6 +68,16 @@ class OCRAPI(object):
         :return:
         """
         caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/images')
+        caller.send()
+
+        return caller
+
+    def get_layout(self, request_id: str) -> 'ApiCall':
+        """
+        Gets the file's protobuf layout
+        """
+
+        caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/layout')
         caller.send()
 
         return caller

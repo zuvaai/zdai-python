@@ -34,3 +34,4 @@ class FieldTrainingRequest(BaseRequest):
         """
         latest, call = self.api().get_training_status(request_id = self.id, field_id = self.field_id)
         self._json = latest.json()
+        return self._json
