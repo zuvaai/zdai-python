@@ -121,8 +121,9 @@ Note that the above accepts a list of ```file_ids``` and a list of ```field_ids`
 To create a training request for a field, as well as obtain the request's status and accuracy and validation details:
 
 ```python
+from time import sleep
 from zdai import ZDAISDK
-from zdai import CustomFieldTrainer
+from zdai.CustomFieldTrainer import CustomFieldTrainer
 
 sdk = ZDAISDK(from_config = True)
 custom_field = CustomFieldTrainer(sdk = sdk, name = 'customfieldname')
@@ -130,18 +131,22 @@ custom_field = CustomFieldTrainer(sdk = sdk, name = 'customfieldname')
 custom_field.create_empty()
 with open('file_zones/upload_files/...', 'rb') as f:
     file, _ = sdk.file.create(content= f.read())
+ocr_request , _ = sdk.ocr.create(file_ids = [file.id])
+while not (ocr_request[0].is_finished()):
+    ocr_request[0].update()
+    sleep(5)
 custom_field.add_annotation(file_id = file.id, start = 100, end = 150)
 custom_field.add_annotation(file_id = file.id, start = 500, end = 550)
 custom_field.train()
 
 print(custom_field.get_accuracy())
 print(custom_field.get_validation_details())
-print(custom_field.get_layout())
 print(custom_field.get_metadata())
 
 ```
 
 Note that at least 30 files are needed for well trained fields.
+Note that OCR on files for training must be complete before training.
 
 ## Language
 

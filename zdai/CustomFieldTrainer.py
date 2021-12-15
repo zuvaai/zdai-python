@@ -1,5 +1,6 @@
 from zdai import ZDAISDK
 import time
+import json
 
 
 class CustomFieldTrainer(object):
@@ -53,27 +54,16 @@ class CustomFieldTrainer(object):
         Add a start and end character range that belongs to a file_id.
         This range will be used during training.
         """
-        def exists(file_id):
-            return any([a for a in self.annotations if a.get('file_id') == file_id])
-
         def add(file_id: str, start: int, end: int):
-            if not exists(file_id):
-                self.annotations.append({
-                    "file_id": file_id,
-                    "locations": [
-                        {
-                            "start": start,
-                            "end": end
-                        }
-                    ]
-                })
-            else:
-                for annotation in self.annotations:
-                    if annotation.get('file_id') == file_id:
-                        annotation.get('locations').append({
-                            "start": start,
-                            "end": end
-                        })
+            self.annotations.append({
+                "file_id": file_id,
+                "locations": [
+                    {
+                        "start": start,
+                        "end": end
+                    }
+                ]
+            })
 
         add(file_id, start, end)
 
@@ -81,11 +71,12 @@ class CustomFieldTrainer(object):
         """
         Creates a new training request using the annotations
         """
-        request, _ = self.sdk().fields.train(field_id = self.field_id, annotations = self.annotations)
+        json_annotation = json.dumps(self.annotations)
+        request, _ = self.sdk().fields.train(field_id = self.field_id, annotations = json_annotation)
 
         while True:
             latest = request.update()
-            print(f'{latest.type} is {latest.status}')
+            print(f'{latest.get("request_id")} is {latest.get("status")}')
 
             if request.is_finished():
                 break
@@ -99,20 +90,16 @@ class CustomFieldTrainer(object):
         accuracy, _ = self.sdk().fields.get_accuracy(field_id = self.field_id)
         return accuracy
 
-    def get_layout(self):
-        """
-        Get the custom field's protobuf layout
-        """
-        return self.sdk().fields.get_layout(field_id = self.field_id)
-
     def get_validation_details(self):
         """
         Get the custom field's validation details
         """
-        return self.sdk().fields.get_validation_details(field_id = self.field_id)
+        validation_details, _ = self.sdk().fields.get_validation_details(field_id = self.field_id)
+        return validation_details
 
     def get_metadata(self):
         """
         Get the custom field's metadata
         """
-        return self.sdk().fields.get_metadata(field_id = self.field_id)
+        metadata, _ = self.sdk().fields.get_metadata(field_id = self.field_id)
+        return metadata

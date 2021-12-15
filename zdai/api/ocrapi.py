@@ -34,6 +34,7 @@ class OCRAPI(object):
         """
         caller = self._call.new(method = 'POST', path = 'ocr')
         caller.add_body(key = 'file_ids', value = file_ids)
+        caller.add_body(key = 'layout', value = True)
         caller.send()
 
         return [OCRRequest(api = self, json = c) for c in caller.response.json().get('file_ids')], caller
@@ -67,6 +68,16 @@ class OCRAPI(object):
         :return:
         """
         caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/images')
+        caller.send()
+
+        return caller
+
+    def get_layout(self, request_id: str) -> 'ApiCall':
+        """
+        Gets the file's protobuf layout
+        """
+
+        caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/layout')
         caller.send()
 
         return caller

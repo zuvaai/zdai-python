@@ -24,7 +24,6 @@ class FieldMetadata:
     is_trained: bool
     read_only: bool
     file_ids: List[str]
-    status: str
 
 
 @dataclass
@@ -42,7 +41,6 @@ class FieldValidationDetails:
 
 @dataclass
 class FieldAccuracy:
-    field_id: str
     precision: float
     recall: float
-    fscore: float
+    f_score: float

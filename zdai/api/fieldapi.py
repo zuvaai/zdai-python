@@ -43,7 +43,7 @@ class FieldAPI(object):
 
         caller.send()
 
-        return caller.response.json()[0].get('field_id'), caller
+        return caller.response.json().get('field_id'), caller
 
     def train(self, field_id: str, annotations: List[dict]):
         """
@@ -107,7 +107,7 @@ class FieldAPI(object):
 
         return fields, caller
 
-    def get_metadata(self, field_id: int):
+    def get_metadata(self, field_id: str):
         """
         Gets the field's metadata
         """
@@ -138,16 +138,6 @@ class FieldAPI(object):
         caller.send()
 
         return FieldAccuracy(**caller.response.json()), caller
-
-    def get_layout(self, field_id: str):
-        """
-        Gets the field's protobuf layout
-        """
-
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/layout')
-        caller.send()
-
-        return caller
 
     def get_validation_details(self, field_id: str):
         """
