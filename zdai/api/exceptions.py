@@ -63,6 +63,12 @@ class ApiCallNotFoundError(ApiCallError):  # catch-all exception
         self.formatted_message = f'Not Found: {call.response.request.url}'
         super().__init__(call)
 
+class ApiCallUnauthorizedError(ApiCallError):
+    def __init__(self, call):
+        self.call = call
+        self.error_code, self.error_message = _get_error_data(call.response.content)
+        self.formatted_message = f'{self.call.response.reason}: {self.error_code}: {self.error_message}'
+        super().__init__(call)
 
 class ApiCallConflictError(ApiCallError):
     def __init__(self, call):
