@@ -12,11 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from dataclasses import dataclass
+from typing import List
 
-from .field import Field
-from .file import File
-from .language_classification_request import LanguageClassificationRequest
-from .document_classification_request import DocumentClassificationRequest
-from .field_extraction_request import FieldExtractionRequest
-from .field_training_request import FieldTrainingRequest
-from .ocr_request import OCRRequest
+
+@dataclass
+class FieldMetadata:
+    field_id: str
+    name: str
+    description: str
+    is_trained: bool
+    read_only: bool
+    file_ids: List[str]
+
+
+@dataclass
+class FieldValidationLocation:
+    character_start: int
+    character_end: int
+
+
+@dataclass
+class FieldValidationDetails:
+    file_id: str
+    type: str
+    location: FieldValidationLocation
+
+
+@dataclass
+class FieldAccuracy:
+    precision: float
+    recall: float
+    f_score: float

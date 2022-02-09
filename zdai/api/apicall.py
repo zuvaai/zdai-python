@@ -70,6 +70,8 @@ class ApiCall(ApiEndpoint):
         except requests.exceptions.HTTPError as e:
             if self.response.status_code == 400:
                 raise ApiCallBadRequestError(self)
+            elif self.response.status_code == 401:
+                raise ApiCallUnauthorizedError(self)
             elif self.response.status_code == 403:
                 raise ApiCallForbiddenError(self)
             elif self.response.status_code == 404:
