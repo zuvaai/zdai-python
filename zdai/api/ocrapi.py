@@ -72,12 +72,22 @@ class OCRAPI(object):
 
         return caller
 
-    def get_layout(self, request_id: str) -> 'ApiCall':
+    def get_layouts(self, request_id: str) -> 'ApiCall':
         """
         Gets the file's protobuf layout
+
+        :return:
         """
 
-        caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/layout')
+        caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/layouts')
         caller.send()
 
         return caller
+
+    def get_layout(self, request_id: str) -> 'ApiCall':
+        """
+        Gets the file's protobuf layout (backwards compatibility)
+
+        :return:
+        """
+        return self.get_layouts(request_id)
