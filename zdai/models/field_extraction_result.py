@@ -12,7 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
+
+
+@dataclass
+class FieldExtractionResultSpan:
+    """
+    Dataclass to store the properties associated with a field extraction result span
+    """
+    text_start: int = None
+    text_end: int = None
+    page_start: int = None
+    page_end: int = None
+    top: int = None
+    left: int = None
+    bottom: int = None
+    right: int = None
 
 
 @dataclass
@@ -22,11 +38,4 @@ class FieldExtractionResult:
     """
     field_id: str = None
     text: str = None
-    text_start: int = None
-    text_end: int = None
-    page_start: int = None
-    page_end: int = None
-    top: int = None
-    left: int = None
-    bottom: int = None
-    right: int = None
+    spans: List[FieldExtractionResultSpan] = field(default_factory = lambda: [])
