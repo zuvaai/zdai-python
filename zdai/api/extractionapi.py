@@ -16,7 +16,7 @@ from typing import List, Tuple
 
 from .apicall import ApiCall
 from ..models.field_extraction_request import FieldExtractionRequest
-from ..models.field_extraction_result import FieldExtractionResult
+from ..models.field_extraction_result import FieldExtractionResult, FieldExtractionResultSpan
 import json
 from types import SimpleNamespace
 
@@ -68,24 +68,33 @@ class ExtractionAPI(object):
 
         results = []
 
+        # Go through each of the Extraction Results
         for result in namespaces.results:
+            # Regardless if there's extracted text, tag each result with a field_id.
+            extraction_result = FieldExtractionResult(field_id = result.field_id)
 
+            # If there's no extracted data for the Field, then append an empty field extraction result
             if not result.extractions:
-                results.append(FieldExtractionResult(field_id = result.field_id))
+                results.append(extraction_result)
                 continue
+
+            # If there's extracted data for the Field, then assign the text to that extraction, and
+            # add the spans. Note that a Field Extraction can have multiple spans.
             for extraction in result.extractions:
+                extraction_result.text = extraction.text
+
                 for span in extraction.spans:
-                    results.append(FieldExtractionResult(
-                        field_id = result.field_id,
-                        text = extraction.text,
-                        text_start = span.start,
-                        text_end = span.end,
-                        page_start = span.pages.start,
-                        page_end = span.pages.end,
-                        top = span.bounds.top,
-                        left = span.bounds.left,
-                        bottom = span.bounds.bottom,
-                        right = span.bounds.left
-                    ))
+                    extraction_span = FieldExtractionResultSpan(
+                                                text_start = span.start,
+                                                text_end = span.end,
+                                                page_start = span.pages.start,
+                                                page_end = span.pages.end,
+                                                top = span.bounds.top,
+                                                left = span.bounds.left,
+                                                bottom = span.bounds.bottom,
+                                                right = span.bounds.right)
+
+                    extraction_result.spans.append(extraction_span)
+                results.append(extraction_result)
 
         return results, caller
