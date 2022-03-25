@@ -206,7 +206,7 @@ while len(requests) > 0:
                 print(f'Finished: {request.language}')
             elif request.is_type(FieldExtractionRequest):
                 for result in request.get_results():
-                    print(result.field_id, result.text)
+                    print(result.field_id, result.text, result.spans)
 
             requests.remove(request)
     time.sleep(2)
