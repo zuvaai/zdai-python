@@ -70,18 +70,18 @@ class ExtractionAPI(object):
 
         # Go through each of the Extraction Results
         for result in namespaces.results:
-            # Regardless if there's extracted text, tag each result with a field_id.
-            extraction_result = FieldExtractionResult(field_id = result.field_id)
 
             # If there's no extracted data for the Field, then append an empty field extraction result
             if not result.extractions:
-                results.append(extraction_result)
+                # Regardless if there's extracted text, tag each result with a field_id.
+                results.append(FieldExtractionResult(field_id = result.field_id))
                 continue
 
-            # If there's extracted data for the Field, then assign the text to that extraction, and
-            # add the spans. Note that a Field Extraction can have multiple spans.
+            # If there's extracted data for the Field, then create a new instance of FieldExtractionResult
+            # for each of the entries. Append the spans list for each text extraction.
             for extraction in result.extractions:
-                extraction_result.text = extraction.text
+                extraction_result = FieldExtractionResult(field_id = result.field_id,
+                                                          text = extraction.text)
 
                 for span in extraction.spans:
                     extraction_span = FieldExtractionResultSpan(
