@@ -80,9 +80,8 @@ class ExtractionAPI(object):
             # If there's extracted data for the Field, then create a new instance of FieldExtractionResult
             # for each of the entries. Append the spans list for each text extraction.
             for extraction in result.extractions:
-                extraction_result = FieldExtractionResult(field_id = result.field_id)
-
-                extraction_result.text = extraction.text
+                extraction_result = FieldExtractionResult(field_id = result.field_id,
+                                                          text = extraction.text)
 
                 for span in extraction.spans:
                     extraction_span = FieldExtractionResultSpan(
