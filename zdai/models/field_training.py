@@ -44,3 +44,4 @@ class FieldAccuracy:
     precision: float
     recall: float
     f_score: float
+    example_count: int
