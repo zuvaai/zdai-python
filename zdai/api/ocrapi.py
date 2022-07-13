@@ -26,7 +26,7 @@ class OCRAPI(object):
     def __init__(self, token: str, url: str):
         self._call = ApiCall(token, url)
 
-    def create(self, file_ids: List[str], generate_layout: bool = False) -> Tuple[List[OCRRequest], ApiCall]:
+    def create(self, file_ids: List[str], generate_layout: bool = None) -> Tuple[List[OCRRequest], ApiCall]:
         """
         Creates a new OCR request for the file ids provided.
 
@@ -34,7 +34,9 @@ class OCRAPI(object):
         """
         caller = self._call.new(method = 'POST', path = 'ocr')
         caller.add_body(key = 'file_ids', value = file_ids)
-        caller.add_body(key = 'layout', value = generate_layout)
+        if generate_layout != None:
+            caller.add_body(key = 'layout', value = generate_layout)
+
         caller.send()
 
         return [OCRRequest(api = self, json = c) for c in caller.response.json().get('file_ids')], caller
