@@ -17,6 +17,34 @@ from typing import List
 
 
 @dataclass
+class BoundingBox:
+    """
+    Dataclass to store a single bounding box
+    """
+    top: int = None
+    left: int = None
+    bottom: int = None
+    right: int = None
+
+    def __init__(self, bounds):
+        self.top = bounds.top
+        self.left = bounds.left
+        self.bottom = bounds.bottom
+        self.right = bounds.right
+
+@dataclass
+class BoundingBoxesByPage:
+    """
+    Dataclass to store the bounding boxes associated with a field extraction result span
+    """
+    page: int = None
+    bounds: List[BoundingBox] = field(default_factory = lambda: [])
+
+    def __init__(self, page_bounds):
+        self.page = page_bounds.page
+        self.bounds = [BoundingBox(line) for line in page_bounds.bounds]
+
+@dataclass
 class FieldExtractionResultSpan:
     """
     Dataclass to store the properties associated with a field extraction result span
@@ -29,7 +57,7 @@ class FieldExtractionResultSpan:
     left: int = None
     bottom: int = None
     right: int = None
-
+    bboxes: List[BoundingBoxesByPage] = field(default_factory = lambda: [])
 
 @dataclass
 class FieldExtractionResult:

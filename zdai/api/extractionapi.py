@@ -16,7 +16,7 @@ from typing import List, Tuple
 
 from .apicall import ApiCall
 from ..models.field_extraction_request import FieldExtractionRequest
-from ..models.field_extraction_result import FieldExtractionResult, FieldExtractionResultSpan
+from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, FieldExtractionResultSpan
 import json
 from types import SimpleNamespace
 
@@ -93,6 +93,8 @@ class ExtractionAPI(object):
                                                 left = span.bounds.left,
                                                 bottom = span.bounds.bottom,
                                                 right = span.bounds.right)
+                    for page in span.bboxes:
+                        extraction_span.bboxes.append(BoundingBoxesByPage(page))
 
                     extraction_result.spans.append(extraction_span)
                 results.append(extraction_result)
