@@ -91,6 +91,33 @@ classification_status, _ = sdk.classification.get(request_id = classification_jo
 
 Note that the above accepts a list of ```file_ids```.
 
+## (Alpha) Multi-level Classification
+
+To create a multi-level classification request on a file, as well as obtain the results:
+
+```python
+from zdai import ZDAISDK
+
+sdk = ZDAISDK(from_config = True)
+
+with open('file_zones/upload_files/...', 'rb') as f:
+    file, _ = sdk.file.create(content = f.read())
+
+mlc_jobs, _ = sdk.mlc.create(file_ids = [file.id])
+mlc_status, _ = sdk.mlc.get(request_id = mlc_jobs[0].id)
+
+# Once the request has completed (mlc_job.is_finished() or mlc_job.is_successful(), you can obtain the request's MLC properties
+# Below are sample outputs using the above print statement
+# Contract, Business Transaction Agt, Letter of Intent
+# Contract, Structured Finance Agt, ISDA
+
+for mlc in mlc_jobs:
+    if mlc.is_successful():
+        print(f'{mlc.classification_1}, {mlc.classification_2}, {mlc.classification_3}')
+    
+
+```
+
 ## Extraction
 
 To create an extraction request on a file, as well as obtain the request's status and results:
@@ -165,6 +192,40 @@ language, _ = sdk.language.get(request_id = language_jobs[0].id)
 ```
 
 Note that the above accepts a list of ```fild_ids```
+
+# Date Normalization
+DocAI can be used to normalize strings that contain dates, so that the `year`, `month` and `day` are returned.
+
+```python
+from zdai import ZDAISDK
+import json
+
+with open('quick_demo.json', 'r') as file:
+    data = json.loads(file.read())
+    phrases = data.get('normalization')
+    mlc_files = data.get('mlc_files')
+
+sdk = ZDAISDK(from_config = True)
+
+date_phrases = [
+    "The amortization schedule will begin on April 6, 1990",
+    "The agreement start date is December 25, 2055",
+    "The End Date of the agreement on the 5th day of December, 2022",
+    "The Start Date is on the 12th day of April, 1540",
+    "This has no dates",
+]
+
+for phrase in date_phrases:
+    response, _ = sdk.normalization.get_dates(text = phrase)
+
+    if not response.dates:
+        print(f'[N/A] {response.text}')
+        continue
+
+    for date in response.dates:
+        print(f'[{date.year}-{date.month}-{date.day}] {response.text}')
+
+```
 
 # Examples
 
