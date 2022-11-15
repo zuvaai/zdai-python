@@ -21,6 +21,7 @@ class File:
     id: str
     content_type: str
     expiration: datetime
+    name: str = None
 
     def is_pdf(self):
         return 'application/pdf' in self.content_type
