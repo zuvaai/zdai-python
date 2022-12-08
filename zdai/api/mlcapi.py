@@ -48,3 +48,21 @@ class MLCAPI(object):
         caller.send()
 
         return MLCRequest(api = self, json = caller.response.json()), caller
+
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[MLCRequest]]:
+        """
+        Gets multiple MLC statuses
+
+        """
+        caller = self._call.new(method= 'GET', path=f'mlcs')
+        caller.add_parameter('request_id', request_ids)
+        caller.send()
+
+        mlc_requests = []
+
+        for request_id, result in caller.response.json().get('statuses').items():
+            r = result
+            r['request_id'] = request_id
+            mlc_requests.append(MLCRequest(api = self, json = r))
+
+        return mlc_requests, caller
