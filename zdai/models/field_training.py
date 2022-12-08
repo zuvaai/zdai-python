@@ -17,6 +17,30 @@ from typing import List
 
 
 @dataclass
+class DocumentType:
+    classifications: List[str]
+    percentage: float
+
+
+@dataclass
+class Language:
+    language: str
+    percentage: float
+
+
+@dataclass
+class Country:
+    code: str
+    name: str
+
+
+@dataclass
+class Jurisdiction:
+    country: Country
+    regions: List[str]
+
+
+@dataclass
 class FieldMetadata:
     field_id: str
     name: str
@@ -24,6 +48,11 @@ class FieldMetadata:
     is_trained: bool
     read_only: bool
     file_ids: List[str]
+    document_types: List[DocumentType]
+    languages: List[Language]
+    jurisdictions: List[Jurisdiction]
+    tags: List[str]
+    normalization_type: str
 
 
 @dataclass
