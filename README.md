@@ -59,6 +59,23 @@ with open('file_zones/upload_files/...', 'rb') as f:
     file_id = file.id
 ```
 
+You may also set the file's expiration date. The default in DocAI is 7 days.
+
+```python
+from zdai import ZDAISDK
+
+sdk = ZDAISDK(from_config = True)
+
+with open('file_zones/upload_files/...', 'rb') as f:
+    # The following will submit the file and set its expiration to 1 day
+    # from the time the API call is run.
+    file, _ = sdk.file.create(content=f.read(), expiration = '1d')
+    # The following will update the file's expiration to 13d in the future.
+    content, _ = sdk.file.set_expiration(file_id = file.id, expiration = '13d')
+    print(f'The file will expire on {content.expiration}.')
+```
+
+
 ## Fields
 To get the AI models that can be used for document text extractions:
 
