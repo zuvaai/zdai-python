@@ -19,6 +19,22 @@ class OCRRequest(BaseRequest):
     def __init__(self, api, json):
         super().__init__(api = api, json = json)
 
+    @property
+    def page_count(self):
+        return self.json().get('page_count')
+
+    @property
+    def character_count(self):
+        return self.json().get('character_count')
+
+    @property
+    def scan_quality(self):
+        return self.json().get('scan_quality')
+
+    @property
+    def scan_score(self):
+        return self.json().get('scan_score')
+
     def get_text(self):
         result, _ = self.api().get_text(request_id = self.id)
         return result.get('text')
