@@ -15,6 +15,10 @@
 from datetime import datetime
 from dataclasses import dataclass
 
+@dataclass
+class FileExpiration:
+    id: str
+    expiration: datetime
 
 @dataclass
 class File:
@@ -30,5 +34,7 @@ class File:
         return 'text/plain' in self.content_type
 
     def is_zuva_ocr(self):
-        return 'appliation/kiraocr' in self.content_type
+        return self.content_type in ['application/kiraocr', 'application/eocr']
 
+    def is_eocr(self):
+        return self.is_zuva_ocr()
