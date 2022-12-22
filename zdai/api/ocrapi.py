@@ -64,9 +64,8 @@ class OCRAPI(object):
         ocr_requests = []
 
         for request_id, result in caller.response.json().get('statuses').items():
-            r = result
-            r['request_id'] = request_id
-            ocr_requests.append(OCRRequest(api = self, json = r))
+            result['request_id'] = request_id
+            ocr_requests.append(OCRRequest(api = self, json = result))
 
         return ocr_requests, caller
 

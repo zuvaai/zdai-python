@@ -217,11 +217,6 @@ DocAI can be used to normalize strings that contain dates, so that the `year`, `
 from zdai import ZDAISDK
 import json
 
-with open('quick_demo.json', 'r') as file:
-    data = json.loads(file.read())
-    phrases = data.get('normalization')
-    mlc_files = data.get('mlc_files')
-
 sdk = ZDAISDK(from_config = True)
 
 date_phrases = [

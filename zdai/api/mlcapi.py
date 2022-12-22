@@ -28,7 +28,7 @@ class MLCAPI(object):
 
     def create(self, file_ids: List[str]) -> Tuple[List[MLCRequest], ApiCall]:
         """
-        Creates a new Language request for the file ids provided.
+        Creates a MLC Language request for the file ids provided.
 
         :return:
         """
@@ -49,7 +49,7 @@ class MLCAPI(object):
 
         return MLCRequest(api = self, json = caller.response.json()), caller
 
-    def get_multiple(self, request_ids: List[str]) -> Tuple[List[MLCRequest]]:
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[MLCRequest], ApiCall]:
         """
         Gets multiple MLC statuses
 

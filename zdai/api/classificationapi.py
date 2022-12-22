@@ -61,8 +61,7 @@ class ClassificationAPI(object):
         classification_requests = []
 
         for request_id, result in caller.response.json().get('statuses').items():
-            r = result
-            r['request_id'] = request_id
-            classification_requests.append(DocumentClassificationRequest(api = self, json = r))
+            result['request_id'] = request_id
+            classification_requests.append(DocumentClassificationRequest(api = self, json = result))
 
         return classification_requests, caller

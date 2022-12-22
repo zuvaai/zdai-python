@@ -68,9 +68,8 @@ class ExtractionAPI(object):
         # For now assume all is well
 
         for request_id, result in caller.response.json().get('statuses').items():
-            r = result
-            r['request_id'] = request_id
-            field_extraction_requests.append(FieldExtractionRequest(api = self, json = r))
+            result['request_id'] = request_id
+            field_extraction_requests.append(FieldExtractionRequest(api = self, json = result))
 
         return field_extraction_requests, caller
 

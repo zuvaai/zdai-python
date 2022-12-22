@@ -61,8 +61,7 @@ class LanguageAPI(object):
         language_requests = []
 
         for request_id, result in caller.response.json().get('statuses').items():
-            r = result
-            r['request_id'] = request_id
-            language_requests.append(LanguageClassificationRequest(api = self, json = r))
+            result['request_id'] = request_id
+            language_requests.append(LanguageClassificationRequest(api = self, json = result))
 
         return language_requests, caller
