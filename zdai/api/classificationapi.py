@@ -48,3 +48,20 @@ class ClassificationAPI(object):
         caller.send()
 
         return DocumentClassificationRequest(api = self, json = caller.response.json()), caller
+
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[DocumentClassificationRequest], ApiCall]:
+        """
+        Gets multiple Classification statuses
+
+        """
+        caller = self._call.new(method= 'GET', path=f'classifications')
+        caller.add_parameter('request_id', request_ids)
+        caller.send()
+
+        classification_requests = []
+
+        for request_id, result in caller.response.json().get('statuses').items():
+            result['request_id'] = request_id
+            classification_requests.append(DocumentClassificationRequest(api = self, json = result))
+
+        return classification_requests, caller

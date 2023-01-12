@@ -13,11 +13,23 @@
 # limitations under the License.
 
 
-from .field import Field
-from .file import File
-from .language_classification_request import LanguageClassificationRequest
-from .document_classification_request import DocumentClassificationRequest
-from .field_extraction_request import FieldExtractionRequest
-from .field_training_request import FieldTrainingRequest
-from .ocr_request import OCRRequest
-from .mlc_request import MLCRequest
+class BaseNormalization:
+    def __init__(self, api, json):
+        self._type = type(self)
+        self._api = api
+        self._json = json
+
+    def json(self):
+        return self._json
+
+    @property
+    def request_id(self):
+        return self.json().get('request_id')
+
+    @property
+    def text(self):
+        return self.json().get('text')
+
+    @property
+    def sha256(self):
+        return self.json().get('sha-256')

@@ -41,6 +41,8 @@ class ZDAISDK(object):
         self._extraction_api = zdai.ExtractionAPI(url = self.url, token = self.token)
         self._field_api = zdai.FieldAPI(url = self.url, token = self.token)
         self._ocr_api = zdai.OCRAPI(url = self.url, token = self.token)
+        self._mlc_api = zdai.MLCAPI(url = self.url, token = self.token)
+        self._normalization_api = zdai.NormalizationAPI(url = self.url, token = self.token)
 
     def has_access(self):
         return all(f is not None for f in [self.url, self.token])
@@ -86,6 +88,20 @@ class ZDAISDK(object):
         Returns the OCRAPI instance
         """
         return self._ocr_api
+
+    @property
+    def mlc(self) -> zdai.MLCAPI:
+        """
+        Returns the MLCAPI instance
+        """
+        return self._mlc_api
+
+    @property
+    def normalization(self) -> zdai.NormalizationAPI:
+        """
+        Returns the Normalization instance
+        """
+        return self._normalization_api
 
     @property
     def config(self):

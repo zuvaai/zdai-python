@@ -53,6 +53,26 @@ class ExtractionAPI(object):
 
         return FieldExtractionRequest(api = self, json = caller.response.json()), caller
 
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[FieldExtractionRequest], ApiCall]:
+        """
+        Gets multiple extraction statuses
+
+        """
+        caller = self._call.new(method = 'GET', path = 'extractions')
+        caller.add_parameter('request_id', request_ids)
+        caller.send()
+
+        field_extraction_requests = []
+
+        # What if the user provides invalid ID? Should likely expose the errors via the SDK..
+        # For now assume all is well
+
+        for request_id, result in caller.response.json().get('statuses').items():
+            result['request_id'] = request_id
+            field_extraction_requests.append(FieldExtractionRequest(api = self, json = result))
+
+        return field_extraction_requests, caller
+
     def get_result(self, request_id: str) -> Tuple[List[FieldExtractionResult], ApiCall]:
         """
         Gets the Extraction Result data for the request_id.

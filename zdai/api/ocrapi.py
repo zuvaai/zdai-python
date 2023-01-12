@@ -52,6 +52,23 @@ class OCRAPI(object):
 
         return OCRRequest(api = self, json = caller.response.json()), caller
 
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[OCRRequest], ApiCall]:
+        """
+        Gets multiple OCR statuses
+
+        """
+        caller = self._call.new(method= 'GET', path=f'ocrs')
+        caller.add_parameter('request_id', request_ids)
+        caller.send()
+
+        ocr_requests = []
+
+        for request_id, result in caller.response.json().get('statuses').items():
+            result['request_id'] = request_id
+            ocr_requests.append(OCRRequest(api = self, json = result))
+
+        return ocr_requests, caller
+
     def get_text(self, request_id: str) -> Tuple[dict, ApiCall]:
         """
         Gets the OCR text for the request_id.

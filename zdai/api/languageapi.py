@@ -48,3 +48,20 @@ class LanguageAPI(object):
         caller.send()
 
         return LanguageClassificationRequest(api = self, json = caller.response.json()), caller
+
+    def get_multiple(self, request_ids: List[str]) -> Tuple[List[LanguageClassificationRequest], ApiCall]:
+        """
+        Gets multiple Language statuses
+
+        """
+        caller = self._call.new(method='GET', path=f'languages')
+        caller.add_parameter('request_id', request_ids)
+        caller.send()
+
+        language_requests = []
+
+        for request_id, result in caller.response.json().get('statuses').items():
+            result['request_id'] = request_id
+            language_requests.append(LanguageClassificationRequest(api = self, json = result))
+
+        return language_requests, caller

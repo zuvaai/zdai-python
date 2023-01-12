@@ -8,3 +8,5 @@ from .fieldapi import FieldAPI
 from .fileapi import FileAPI
 from .languageapi import LanguageAPI
 from .ocrapi import OCRAPI
+from .mlcapi import MLCAPI
+from .normalizationapi import NormalizationAPI

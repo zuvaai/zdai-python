@@ -12,33 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .baserequest import BaseRequest
+from .basenormalization import BaseNormalization
+from dataclasses import dataclass
+
+@dataclass
+class Date:
+    day: int
+    month: int
+    year: int
 
 
-class OCRRequest(BaseRequest):
+class DateNormalization(BaseNormalization):
     def __init__(self, api, json):
         super().__init__(api = api, json = json)
 
     @property
-    def page_count(self):
-        return self.json().get('page_count')
+    def _dates(self):
+        return self.json().get('date')
 
     @property
-    def character_count(self):
-        return self.json().get('character_count')
+    def dates(self):
+        dates = []
+        if not self._dates:
+            return
 
-    @property
-    def scan_quality(self):
-        return self.json().get('scan_quality')
+        for date in self._dates:
+            dates.append(Date(day = date.get('day'),
+                              month = date.get('month'),
+                              year = date.get('year')))
 
-    @property
-    def scan_score(self):
-        return self.json().get('scan_score')
+        return dates
 
-    def get_text(self):
-        result, _ = self.api().get_text(request_id = self.id)
-        return result.get('text')
-
-    def get_images(self):
-        data = self.api().get_images(request_id = self.id)
-        return data
