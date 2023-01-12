@@ -72,7 +72,7 @@ class FileAPI(object):
         Example expirations are:
             2022-12-17T00:00:00Z — sets the expiration to December 17, 2022
             1d — sets the expiration to 1 day from when this call is run
-            13d — sets the expiration to 13 days from when this all is run
+            13d — sets the expiration to 13 days from when this call is run
 
         :param file_id: The file ID for which the file expiration will be set
         :param expiration: The new expiration (formatted YYYY-MM-DDTHH:mm:ssZ), or length of time (e.g. 7d for 7 days),

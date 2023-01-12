@@ -28,7 +28,7 @@ class MLCAPI(object):
 
     def create(self, file_ids: List[str]) -> Tuple[List[MLCRequest], ApiCall]:
         """
-        Creates a MLC Language request for the file ids provided.
+        Creates an MLC request for the file ids provided.
 
         :return:
         """
