@@ -16,6 +16,8 @@ from typing import Tuple
 
 from ..api.apicall import ApiCall
 from ..models.date_normalization import DateNormalization
+from ..models.currency_normalization import CurrencyNormalization
+from ..models.duration_normalization import DurationNormalization
 
 
 class NormalizationAPI(object):
@@ -38,3 +40,29 @@ class NormalizationAPI(object):
         caller.send()
 
         return DateNormalization(api = self, json = caller.response.json()), caller
+
+    def get_durations(self, text: str) -> tuple[DurationNormalization, ApiCall]:
+        """
+        Gets the normalized duration values from the input string
+
+        :return:
+        """
+
+        caller = self._call.new(method = 'POST', path = 'normalize/duration')
+        caller.add_body(key = 'text', value = text)
+        caller.send()
+
+        return DurationNormalization(api = self, json = caller.response.json()), caller
+
+    def get_currencies(self, text: str) -> Tuple[CurrencyNormalization, ApiCall]:
+        """
+        Gets the normalized currency values from the input string
+
+        :return:
+        """
+
+        caller = self._call.new(method = 'POST', path = 'normalize/currency')
+        caller.add_body(key = 'text', value = text)
+        caller.send()
+
+        return CurrencyNormalization(api = self, json = caller.response.json()), caller
