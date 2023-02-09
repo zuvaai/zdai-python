@@ -2,7 +2,7 @@
 
 # Wrapper
 
-The API wrapper is designed to reflect the decoupled nature of ZDAI's microservices. Meaning, there is one wrapper 
+The API wrapper is designed to reflect the decoupled nature of ZDAI's microservices. Meaning, there is one wrapper
 class for each microservice.
 
 ## Setup
@@ -131,7 +131,7 @@ mlc_status, _ = sdk.mlc.get(request_id = mlc_jobs[0].id)
 for mlc in mlc_jobs:
     if mlc.is_successful():
         print(f'{mlc.classification_1}, {mlc.classification_2}, {mlc.classification_3}')
-    
+
 
 ```
 
@@ -239,7 +239,7 @@ for phrase in date_phrases:
 ```
 
 # Currency Normalization
-DocAI can be used to normalize strings that contain dates, so that the `value` and `symbol` are returned.
+DocAI can be used to normalize strings that contain currencies, so that the `value` and `symbol` are returned.
 
 ```python
 from zdai import ZDAISDK
@@ -261,7 +261,7 @@ for phrase in currency_phrases:
 ```
 
 # Duration Normalization
-DocAI can be used to normalize strings that contain dates, so that the `value` and `unit` are returned.
+DocAI can be used to normalize strings that contain durations, so that the `value` and `unit` are returned.
 
 ```python
 from zdai import ZDAISDK
