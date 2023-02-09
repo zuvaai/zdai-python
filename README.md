@@ -2,7 +2,7 @@
 
 # Wrapper
 
-The API wrapper is designed to reflect the decoupled nature of ZDAI's microservices. Meaning, there is one wrapper 
+The API wrapper is designed to reflect the decoupled nature of ZDAI's microservices. Meaning, there is one wrapper
 class for each microservice.
 
 ## Setup
@@ -131,7 +131,7 @@ mlc_status, _ = sdk.mlc.get(request_id = mlc_jobs[0].id)
 for mlc in mlc_jobs:
     if mlc.is_successful():
         print(f'{mlc.classification_1}, {mlc.classification_2}, {mlc.classification_3}')
-    
+
 
 ```
 
@@ -215,7 +215,6 @@ DocAI can be used to normalize strings that contain dates, so that the `year`, `
 
 ```python
 from zdai import ZDAISDK
-import json
 
 sdk = ZDAISDK(from_config = True)
 
@@ -236,6 +235,52 @@ for phrase in date_phrases:
 
     for date in response.dates:
         print(f'[{date.year}-{date.month}-{date.day}] {response.text}')
+
+```
+
+# Currency Normalization
+DocAI can be used to normalize strings that contain currencies, so that the `value` and `symbol` are returned.
+
+```python
+from zdai import ZDAISDK
+
+sdk = ZDAISDK(from_config = True)
+
+currency_phrases = [
+      "The landlord is charging two thousand five hundred dollars",
+      "The mortgage owner agrees to pay a value of three hundred and fifty euros per month",
+      "During their trip to Korea, the couple agreed to pay the establishment 500 Won per day",
+      "The agreement defines the Payment to be nine hundred and ten million five hundred and one thousand five hundred and fifty five dollars"
+    ]
+
+for phrase in currency_phrases:
+    response, _ = sdk.normalization.get_currencies(text = phrase)
+
+    for currency in response.currencies:
+        print(f'[{currency.symbol} {currency.value}] {response.text}')
+```
+
+# Duration Normalization
+DocAI can be used to normalize strings that contain durations, so that the `value` and `unit` are returned.
+
+```python
+from zdai import ZDAISDK
+
+sdk = ZDAISDK(from_config = True)
+
+duration_phrases = [
+    "This agreement between the two counterparties will expire two years after its execution",
+    "The owner of the agreement must pay the client the after the 5th anniversary of its execution",
+    "The lendee, after five weeks of obtaining the loan, will begin paying interest",
+    "The interest of this agreement will increase by .5% after three years",
+    "My birthday starts six (6) days into the month of April"
+]
+
+for phrase in duration_phrases:
+    response, _ = sdk.normalization.get_durations(text = phrase)
+
+    for duration in response.durations:
+        print(f'[{duration.value} {duration.unit}] {response.text}')
 
 ```
 
