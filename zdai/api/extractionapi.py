@@ -16,7 +16,8 @@ from typing import List, Tuple
 
 from .apicall import ApiCall
 from ..models.field_extraction_request import FieldExtractionRequest
-from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, FieldExtractionResultSpan
+from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, \
+    FieldExtractionResultSpan, DurationNormalizedValues, CurrencyNormalizedValues, DateNormalizedValues
 import json
 from types import SimpleNamespace
 
@@ -100,8 +101,37 @@ class ExtractionAPI(object):
             # If there's extracted data for the Field, then create a new instance of FieldExtractionResult
             # for each of the entries. Append the spans list for each text extraction.
             for extraction in result.extractions:
+
+                # Set the field_id and the text that was extracted.
+                # The text can have null values.
                 extraction_result = FieldExtractionResult(field_id = result.field_id,
                                                           text = extraction.text)
+
+                # Add normalized durations, if any
+                if hasattr(extraction, 'durations'):
+                    durations = [DurationNormalizedValues(unit = d.unit,
+                                                          value = d.value)
+                                 for d in extraction.durations]
+
+                    extraction_result.durations_normalized.extend(durations)
+
+                # Add normalized currencies, if any
+                if hasattr(extraction, 'currencies'):
+                    currencies = [CurrencyNormalizedValues(value = c.value,
+                                                           symbol = c.symbol,
+                                                           precision = c.precision)
+                                 for c in extraction.currencies]
+
+                    extraction_result.currencies_normalized.extend(currencies)
+
+                # Add normalized dates, if any
+                if hasattr(extraction, 'dates'):
+                    dates = [DateNormalizedValues(day = c.day,
+                                                  month = c.month,
+                                                  year = c.year)
+                                 for c in extraction.dates]
+
+                    extraction_result.dates_normalized.extend(dates)
 
                 for span in extraction.spans:
                     extraction_span = FieldExtractionResultSpan(
