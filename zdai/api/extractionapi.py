@@ -103,20 +103,21 @@ class ExtractionAPI(object):
                 extraction_result = FieldExtractionResult(field_id = result.field_id,
                                                           text = extraction.text)
 
-                for span in extraction.spans:
-                    extraction_span = FieldExtractionResultSpan(
-                                                text_start = span.start,
-                                                text_end = span.end,
-                                                page_start = span.pages.start,
-                                                page_end = span.pages.end,
-                                                top = span.bounds.top,
-                                                left = span.bounds.left,
-                                                bottom = span.bounds.bottom,
-                                                right = span.bounds.right)
-                    for page in span.bboxes:
-                        extraction_span.bboxes.append(BoundingBoxesByPage(page))
+                if hasattr(extraction, 'spans'):
+                    for span in extraction.spans:
+                        extraction_span = FieldExtractionResultSpan(
+                                                    text_start = span.start,
+                                                    text_end = span.end,
+                                                    page_start = span.pages.start,
+                                                    page_end = span.pages.end,
+                                                    top = span.bounds.top,
+                                                    left = span.bounds.left,
+                                                    bottom = span.bounds.bottom,
+                                                    right = span.bounds.right)
+                        for page in span.bboxes:
+                            extraction_span.bboxes.append(BoundingBoxesByPage(page))
 
-                    extraction_result.spans.append(extraction_span)
+                        extraction_result.spans.append(extraction_span)
                 results.append(extraction_result)
 
         return results, caller
