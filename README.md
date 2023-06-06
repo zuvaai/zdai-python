@@ -7,6 +7,12 @@ class for each microservice.
 
 ## Setup
 
+Install the `zdai` package from this repository.
+
+```
+pip3 install git+https://github.com/zuvaai/zdai-python.git
+```
+
 The following commands will set up the wrapper and test your credentials to make sure they're valid.
 
 ```terminal
@@ -15,12 +21,12 @@ python3 -m zdai --set-url <put url here>
 python3 -m zdai --test connection
 ```
 
-Add the zdai folder to your Python Interpreter's site-packages to make it easier to use/import in your projects.
-
-Sometimes Python ```requests``` module throws ```urllib3``` Connection Errors, which may be addressable by installing
+Sometimes Python `requests` module throws `urllib3` Connection Errors, which may be addressable by installing
 the below packages:
 
-```pip3 install pyopenssl ndg-httpsclient pyasn1```
+```
+pip3 install pyopenssl ndg-httpsclient pyasn1
+```
 
 ## Authorization
 
@@ -75,8 +81,8 @@ with open('file_zones/upload_files/...', 'rb') as f:
     print(f'The file will expire on {content.expiration}.')
 ```
 
-
 ## Fields
+
 To get the AI models that can be used for document text extractions:
 
 ```python
@@ -106,7 +112,7 @@ classification_jobs, _ = sdk.classification.create(file_ids = [file.id])
 classification_status, _ = sdk.classification.get(request_id = classification_jobs[0].id)
 ```
 
-Note that the above accepts a list of ```file_ids```.
+Note that the above accepts a list of `file_ids`.
 
 ## (Alpha) Multi-level Classification
 
@@ -158,7 +164,7 @@ for result in results:
 
 ```
 
-Note that the above accepts a list of ```file_ids``` and a list of ```field_ids```.
+Note that the above accepts a list of `file_ids` and a list of `field_ids`.
 
 ## Training
 
@@ -208,9 +214,10 @@ language_jobs, _ = sdk.language.create(file_ids = [file.id])
 language, _ = sdk.language.get(request_id = language_jobs[0].id)
 ```
 
-Note that the above accepts a list of ```fild_ids```
+Note that the above accepts a list of `fild_ids`
 
 # Date Normalization
+
 DocAI can be used to normalize strings that contain dates, so that the `year`, `month` and `day` are returned.
 
 ```python
@@ -239,6 +246,7 @@ for phrase in date_phrases:
 ```
 
 # Currency Normalization
+
 DocAI can be used to normalize strings that contain currencies, so that the `value` and `symbol` are returned.
 
 ```python
@@ -261,6 +269,7 @@ for phrase in currency_phrases:
 ```
 
 # Duration Normalization
+
 DocAI can be used to normalize strings that contain durations, so that the `value` and `unit` are returned.
 
 ```python
