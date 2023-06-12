@@ -214,7 +214,7 @@ language_jobs, _ = sdk.language.create(file_ids = [file.id])
 language, _ = sdk.language.get(request_id = language_jobs[0].id)
 ```
 
-Note that the above accepts a list of `fild_ids`
+Note that the above accepts a list of `file_ids`
 
 # Date Normalization
 
