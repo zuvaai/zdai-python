@@ -35,7 +35,6 @@ parser.add_argument("--test",
 args = parser.parse_args()
 
 if __name__ == "__main__":
-    config.create_wrapper_config()
     url, token = config.get_access()
 
     if args.get == "token":
