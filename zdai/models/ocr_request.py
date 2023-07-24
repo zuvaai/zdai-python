@@ -43,6 +43,10 @@ class OCRRequest(BaseRequest):
         data = self.api().get_images(request_id = self.id)
         return data
 
+    def get_eocr(self):
+        data = self.api().get_eocr(request_id = self.id)
+        return data
+
     def get_layouts(self):
         data = self.api().get_layouts(request_id = self.id)
         return data
