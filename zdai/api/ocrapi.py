@@ -91,6 +91,18 @@ class OCRAPI(object):
 
         return caller
 
+    def get_eocr(self, request_id: str) -> 'ApiCall':
+        """
+        Gets the file's layout in eOCR format
+
+        :return:
+        """
+
+        caller = self._call.new(method = 'GET', path = f'ocr/{request_id}/eocr')
+        caller.send()
+
+        return caller
+
     def get_layouts(self, request_id: str) -> 'ApiCall':
         """
         Gets the file's protobuf layout
