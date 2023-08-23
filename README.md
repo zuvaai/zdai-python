@@ -137,7 +137,9 @@ mlc_status, _ = sdk.mlc.get(request_id = mlc_jobs[0].id)
 for mlc in mlc_jobs:
     if mlc.is_successful():
         print(f'{mlc.classification_1}, {mlc.classification_2}, {mlc.classification_3}')
-
+        print(f'Is amendment? {mlc.is_amendment}')
+        print(f'Is master agreement? {mlc.is_master_agreement}')
+        print(f'Language: {mlc.language_name}')
 
 ```
 
