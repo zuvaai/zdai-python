@@ -52,3 +52,19 @@ class MLCRequest(BaseRequest):
             return self.classifications[2]
         else:
             return None
+
+    @property
+    def language_name(self):
+        return self.json().get('language').get('name')
+
+    @property
+    def language_code(self):
+        return self.json().get('language').get('code')
+
+    @property
+    def is_amendment(self):
+        return self.json().get('is_amendment')
+
+    @property
+    def is_master_agreement(self):
+        return self.json().get('is_master_agreement')
