@@ -19,10 +19,11 @@ class FieldExtractionRequest(BaseRequest):
     """
     The class used for requests created in the Field Extraction service
     """
+
     def __init__(self, api, json):
-        super().__init__(api = api, json = json)
+        super().__init__(api=api, json=json)
 
     def get_results(self):
-        data, _ = self.api().get_result(request_id = self.id)
+        data, _ = self.api().get_result(request_id=self.id)
 
         return data
