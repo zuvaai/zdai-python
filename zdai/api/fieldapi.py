@@ -110,7 +110,8 @@ class FieldAPI(object):
                 precision=try_fn(float, field.get('precision')),
                 recall=try_fn(float, field.get('recall')),
                 document_count=try_fn(int, field.get('document_count')),
-                is_custom=bool(field.get('is_custom'))
+                is_custom=bool(field.get('is_custom')),
+                is_llm=bool(field.get('is_llm'))
             ))
 
         return fields, caller
