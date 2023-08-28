@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 from ..api.apicall import ApiCall
 from ..models.field import Field
@@ -89,6 +89,13 @@ class FieldAPI(object):
         Gets the list of fields that exist in the ZDAI, which
         the API token has access to.
         """
+
+        def try_fn(fn: Callable, value: str, default=None):
+            try:
+                return fn(value)
+            except:
+                return default
+
         caller = self._call.new(method='GET', path='fields')
         caller.send()
 
@@ -98,11 +105,11 @@ class FieldAPI(object):
                 id=str(field.get('field_id')),
                 name=str(field.get('name')),
                 description=str(field.get('description')),
-                bias=float(field.get('bias')),
-                f_score=float(field.get('f_score')),
-                precision=float(field.get('precision')),
-                recall=float(field.get('recall')),
-                document_count=int(field.get('document_count')),
+                bias=try_fn(float, field.get('bias')),
+                f_score=try_fn(float, field.get('f_score')),
+                precision=try_fn(float, field.get('precision')),
+                recall=try_fn(float, field.get('recall')),
+                document_count=try_fn(int, field.get('document_count')),
                 is_custom=bool(field.get('is_custom'))
             ))
 
