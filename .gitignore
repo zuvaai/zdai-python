@@ -17,6 +17,9 @@ target/
 # Ignore user-specific zdai wrapper
 zdai/config/access.json
 
+# Ignore files from local build
+zdai.egg-info
+
 #Others
 .DS_Store
 test_script*
