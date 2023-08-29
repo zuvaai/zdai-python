@@ -23,10 +23,10 @@ class Field:
     id: str
     name: str
     description: str
-    bias: float
-    f_score: float
-    precision: float
-    recall: float
-    document_count: int
+    bias: float = None
+    f_score: float = None
+    precision: float = None
+    recall: float = None
+    document_count: int = None
     is_custom: bool
     is_llm: bool
