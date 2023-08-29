@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 from ..api.apicall import ApiCall
 from ..models.field import Field
@@ -32,14 +32,14 @@ class FieldAPI(object):
         """
         Creates a new field
         """
-        caller = self._call.new(method = 'POST', path = 'fields')
-        caller.add_body(key = 'field_name', value = field_name)
+        caller = self._call.new(method='POST', path='fields')
+        caller.add_body(key='field_name', value=field_name)
 
         if description:
-            caller.add_body(key = 'description', value = description)
+            caller.add_body(key='description', value=description)
 
         if from_field_id:
-            caller.add_body(key = 'from_field_id', value = from_field_id)
+            caller.add_body(key='from_field_id', value=from_field_id)
 
         caller.send()
 
@@ -68,41 +68,50 @@ class FieldAPI(object):
             ]
 
         """
-        caller = self._call.new(method = 'POST', path = f'fields/{field_id}/train')
+        caller = self._call.new(method='POST', path=f'fields/{field_id}/train')
         caller.set_body_value(annotations)
         caller.send()
 
-        return FieldTrainingRequest(api = self, json = caller.response.json()), caller
+        return FieldTrainingRequest(api=self, json=caller.response.json()), caller
 
     def get_training_status(self, field_id: str, request_id: int):
         """
         Obtain the latest status of the Field Training Request
         """
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/train/{request_id}')
+        caller = self._call.new(
+            method='GET', path=f'fields/{field_id}/train/{request_id}')
         caller.send()
 
-        return FieldTrainingRequest(api = self, json = caller.response.json()), caller
+        return FieldTrainingRequest(api=self, json=caller.response.json()), caller
 
     def get(self) -> Tuple[List[Field], ApiCall]:
         """
         Gets the list of fields that exist in the ZDAI, which
         the API token has access to.
         """
-        caller = self._call.new(method = 'GET', path = 'fields')
+
+        def try_fn(fn: Callable, value: str):
+            try:
+                return fn(value)
+            except:
+                return None
+
+        caller = self._call.new(method='GET', path='fields')
         caller.send()
 
         fields = []
         for field in caller.response.json():
             fields.append(Field(
-                id = str(field.get('field_id')),
-                name = str(field.get('name')),
-                description = str(field.get('description')),
-                bias = float(field.get('bias')),
-                f_score = float(field.get('f_score')),
-                precision = float(field.get('precision')),
-                recall = float(field.get('recall')),
-                document_count = int(field.get('document_count')),
-                is_custom = bool(field.get('is_custom'))
+                id=str(field.get('field_id')),
+                name=str(field.get('name')),
+                description=str(field.get('description')),
+                bias=try_fn(float, field.get('bias')),
+                f_score=try_fn(float, field.get('f_score')),
+                precision=try_fn(float, field.get('precision')),
+                recall=try_fn(float, field.get('recall')),
+                document_count=try_fn(int, field.get('document_count')),
+                is_custom=bool(field.get('is_custom')),
+                is_llm=bool(field.get('is_llm'))
             ))
 
         return fields, caller
@@ -112,7 +121,8 @@ class FieldAPI(object):
         Gets the field's metadata
         """
 
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/metadata')
+        caller = self._call.new(
+            method='GET', path=f'fields/{field_id}/metadata')
         caller.send()
 
         return FieldMetadata(**caller.response.json()), caller
@@ -122,9 +132,10 @@ class FieldAPI(object):
         Updates the field's metadata
         """
 
-        caller = self._call.new(method = 'PUT', path = f'fields/{field_id}/metadata')
-        caller.add_body(key = 'name', value = name)
-        caller.add_body(key = 'description', value = description)
+        caller = self._call.new(
+            method='PUT', path=f'fields/{field_id}/metadata')
+        caller.add_body(key='name', value=name)
+        caller.add_body(key='description', value=description)
         caller.send()
 
         return caller.response.status_code == 204, caller
@@ -134,7 +145,8 @@ class FieldAPI(object):
         Gets the field's accuracy (precision, recall, fscore)
         """
 
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/accuracy')
+        caller = self._call.new(
+            method='GET', path=f'fields/{field_id}/accuracy')
         caller.send()
 
         return FieldAccuracy(**caller.response.json()), caller
@@ -144,19 +156,20 @@ class FieldAPI(object):
         Gets the field's validation details (type of instance (true positive, false positive, false negative) & location)
         """
 
-        caller = self._call.new(method = 'GET', path = f'fields/{field_id}/validation-details')
+        caller = self._call.new(
+            method='GET', path=f'fields/{field_id}/validation-details')
         caller.send()
 
         response = caller.response.json()
         validation_details = []
 
         for validation_detail in response:
-            location = FieldValidationLocation(character_start = validation_detail.get('location')[0],
-                                               character_end = validation_detail.get('location')[1])
+            location = FieldValidationLocation(character_start=validation_detail.get('location')[0],
+                                               character_end=validation_detail.get('location')[1])
 
-            v = FieldValidationDetails(file_id = validation_detail.get('file_id'),
-                                       type = validation_detail.get('type'),
-                                       location = location)
+            v = FieldValidationDetails(file_id=validation_detail.get('file_id'),
+                                       type=validation_detail.get('type'),
+                                       location=location)
 
             validation_details.append(v)
 
