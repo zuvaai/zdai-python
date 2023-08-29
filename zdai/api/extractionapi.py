@@ -17,6 +17,7 @@ from typing import List, Tuple
 from .apicall import ApiCall
 from ..models.field_extraction_request import FieldExtractionRequest
 from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, FieldExtractionResultSpan
+from ..models.field_extraction_answer import FieldExtractionAnswer
 import json
 from types import SimpleNamespace
 
@@ -123,6 +124,33 @@ class ExtractionAPI(object):
                                 BoundingBoxesByPage(page))
 
                         extraction_result.spans.append(extraction_span)
+                results.append(extraction_result)
+
+        return results, caller
+
+    def get_answer(self, request_id: str) -> Tuple[List[FieldExtractionAnswer], ApiCall]:
+        caller = self._call.new(
+            method='GET', path=f'extraction/{request_id}/results/text')
+        caller.send()
+
+        data = json.dumps(caller.response.json())
+
+        namespaces = json.loads(
+            data, object_hook=lambda d: SimpleNamespace(**d))
+
+        results = []
+
+        # Go through each of the Extraction Results
+        for result in namespaces.results:
+            if not hasattr(result, 'answers') or not result.answers:
+                results.append(FieldExtractionAnswer(field_id=result.field_id))
+                continue
+
+            for answer in result.answers:
+                extraction_result = FieldExtractionAnswer(field_id=result.field_id,
+                                                          option=answer.option,
+                                                          value=answer.value)
+
                 results.append(extraction_result)
 
         return results, caller

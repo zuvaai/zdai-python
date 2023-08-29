@@ -12,23 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .baserequest import BaseRequest
+from dataclasses import dataclass
 
 
-class FieldExtractionRequest(BaseRequest):
+@dataclass
+class FieldExtractionAnswer:
     """
-    The class used for requests created in the Field Extraction service
+    Dataclass to store the properties associated with a field extraction anwers result
     """
-
-    def __init__(self, api, json):
-        super().__init__(api=api, json=json)
-
-    def get_results(self):
-        data, _ = self.api().get_result(request_id=self.id)
-
-        return data
-
-    def get_answers(self):
-        data, _ = self.api().get_answer(request_id=self.id)
-
-        return data
+    field_id: str = None
+    option: str = None
+    value: str = None
