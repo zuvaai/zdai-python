@@ -90,11 +90,11 @@ class FieldAPI(object):
         the API token has access to.
         """
 
-        def try_fn(fn: Callable, value: str, default=None):
+        def try_fn(fn: Callable, value: str):
             try:
                 return fn(value)
             except:
-                return default
+                return None
 
         caller = self._call.new(method='GET', path='fields')
         caller.send()
