@@ -16,7 +16,7 @@ from typing import List, Tuple
 
 from .apicall import ApiCall
 from ..models.field_extraction_request import FieldExtractionRequest
-from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, FieldExtractionResultSpan
+from ..models.field_extraction_result import BoundingBoxesByPage, FieldExtractionResult, FieldExtractionResultDefinedTerm, FieldExtractionResultSpan
 from ..models.field_extraction_answer import FieldExtractionAnswer
 import json
 from types import SimpleNamespace
@@ -104,9 +104,33 @@ class ExtractionAPI(object):
             # If there's extracted data for the Field, then create a new instance of FieldExtractionResult
             # for each of the entries. Append the spans list for each text extraction.
             for extraction in result.extractions:
+                defined_term = None
+
+                if hasattr(extraction, 'defined_term'):
+                    defined_term = FieldExtractionResultDefinedTerm(
+                        term=extraction.defined_term.term
+                    )
+                    if hasattr(extraction.defined_term, 'spans'):
+                        for span in extraction.defined_term.spans:
+                            defined_term_span = FieldExtractionResultSpan(
+                                text_start=span.start,
+                                text_end=span.end,
+                                page_start=span.pages.start,
+                                page_end=span.pages.end,
+                                top=span.bounds.top,
+                                left=span.bounds.left,
+                                bottom=span.bounds.bottom,
+                                right=span.bounds.right)
+                            for page in span.bboxes:
+                                defined_term_span.bboxes.append(
+                                    BoundingBoxesByPage(page))
+
+                            defined_term.spans.append(defined_term_span)
+
                 extraction_result = FieldExtractionResult(
                     field_id=result.field_id,
                     text=extraction.text,
+                    defined_term=defined_term
                 )
 
                 if hasattr(extraction, 'spans'):

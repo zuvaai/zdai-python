@@ -64,6 +64,15 @@ class FieldExtractionResultSpan:
 
 
 @dataclass
+class FieldExtractionResultDefinedTerm:
+    """
+    Dataclass to store the properties associated with a field extraction result defined term
+    """
+    term: str = None
+    spans: List[FieldExtractionResultSpan] = field(default_factory=lambda: [])
+
+
+@dataclass
 class FieldExtractionResult:
     """
     Dataclass to store the properties associated with a field extraction result
@@ -71,3 +80,4 @@ class FieldExtractionResult:
     field_id: str = None
     text: str = None
     spans: List[FieldExtractionResultSpan] = field(default_factory=lambda: [])
+    defined_term: FieldExtractionResultDefinedTerm = None
