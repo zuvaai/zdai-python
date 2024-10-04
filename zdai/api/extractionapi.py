@@ -106,6 +106,7 @@ class ExtractionAPI(object):
                 if hasattr(extraction, 'spans'):
                     for span in extraction.spans:
                         extraction_span = FieldExtractionResultSpan(
+                                                    confidence=span.score,
                                                     text_start = span.start,
                                                     text_end = span.end,
                                                     page_start = span.pages.start,
