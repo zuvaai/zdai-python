@@ -97,11 +97,11 @@ class FieldAPI(object):
                 id = str(field.get('field_id')),
                 name = str(field.get('name')),
                 description = str(field.get('description')),
-                bias = float(field.get('bias')),
-                f_score = float(field.get('f_score')),
-                precision = float(field.get('precision')),
-                recall = float(field.get('recall')),
-                document_count = int(field.get('document_count')),
+                bias = float(field.get('bias', 0.0)),
+                f_score = float(field.get('f_score', 0.0)),
+                precision = float(field.get('precision', 0.0)),
+                recall = float(field.get('recall', 0.0)),
+                document_count = int(field.get('document_count', 0)),
                 is_custom = bool(field.get('is_custom'))
             ))
 
