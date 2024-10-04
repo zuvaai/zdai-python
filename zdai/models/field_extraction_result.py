@@ -49,6 +49,7 @@ class FieldExtractionResultSpan:
     """
     Dataclass to store the properties associated with a field extraction result span
     """
+    confidence: float = None
     text_start: int = None
     text_end: int = None
     page_start: int = None
