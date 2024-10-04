@@ -40,6 +40,7 @@ class FileAPI(object):
         caller.use_default_content_type = False
         if is_zuva_ocr: caller.add_header(key = 'Content-Type', value = 'application/eocr')
         if expiration: caller.add_header(key = 'Expiration', value = expiration)
+        caller.add_header(key='X-Attr-Pdf-Object-Streams', value='generate')
 
         caller.set_body_value(value = content)
         caller.send()
