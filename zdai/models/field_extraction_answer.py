@@ -16,17 +16,10 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Field:
+class FieldExtractionAnswer:
     """
-    Field dataclass to store the field properties
+    Dataclass to store the properties associated with a field extraction anwers result
     """
-    id: str
-    name: str
-    description: str
-    bias: float
-    f_score: float
-    precision: float
-    recall: float
-    document_count: int
-    is_custom: bool
-    has_answers: bool
+    field_id: str = None
+    option: str = None
+    value: str = None
