@@ -73,6 +73,33 @@ class FieldExtractionResultDefinedTerm:
 
 
 @dataclass
+class CurrencyNormalizedValues:
+    """
+    Dataclass to store the normalized currency values
+    """
+    value: float = None
+    symbol: str = None
+    precision: int = None
+
+
+@dataclass
+class DateNormalizedValues:
+    """
+    Dataclass to store the normalized date values
+    """
+    day: int = None
+    month: int = None
+    year: int = None
+
+@dataclass
+class DurationNormalizedValues:
+    """
+    Dataclass to store the duration date values
+    """
+    unit: str = None
+    value: int = None
+
+@dataclass
 class FieldExtractionResult:
     """
     Dataclass to store the properties associated with a field extraction result
@@ -81,3 +108,20 @@ class FieldExtractionResult:
     text: str = None
     spans: List[FieldExtractionResultSpan] = field(default_factory=lambda: [])
     defined_term: FieldExtractionResultDefinedTerm = None
+    durations_normalized: List[DurationNormalizedValues] = field(default_factory=lambda: [])
+    dates_normalized: List[DateNormalizedValues] = field(default_factory=lambda: [])
+    currencies_normalized: List[CurrencyNormalizedValues] = field(default_factory=lambda: [])
+
+    def is_normalized(self):
+        return any([self.durations_normalized, self.dates_normalized, self.currencies_normalized])
+
+    def get_normalized(self):
+        if not self.is_normalized():
+            return None, None
+
+        if self.durations_normalized:
+            return 'durations', self.durations_normalized
+        elif self.dates_normalized:
+            return 'dates', self.dates_normalized
+        elif self.currencies_normalized:
+            return 'currencies', self.currencies_normalized

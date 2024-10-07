@@ -341,6 +341,34 @@ while len(requests) > 0:
     time.sleep(2)
 ```
 
+### Obtain an extraction result's normalized values
+
+The API will return the normalized values for fields that have a `normalization_type` of `DATE`, `CURRENCY` or `DURATION`.
+
+The following is an example of a job poller (similar to the above), where the `result` variable is used to obtain the normalized
+values of the text that was extracted.
+
+```python
+while len(requests) > 0:
+    for request in requests:
+        print(request.type, request.id, request.status)
+        request.update()
+        if request.is_finished():
+            for result in request.get_results():
+                if result.is_normalized():
+                    normalized_type, values = result.get_normalized()
+                    if normalized_type == 'dates':
+                        print(f'Here are your dates, normalized: {values}')
+                    elif normalized_type == 'currencies':
+                        print(f'Here are your currencies, normalized: {values}')
+                    elif normalized_type == 'durations':
+                        print(f'Here are your durations, normalized: {values}')
+
+            requests.remove(request)
+
+    time.sleep(2)
+```
+
 ## Obtain a newly-submitted file's ID
 
 ```python
