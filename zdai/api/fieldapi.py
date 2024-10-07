@@ -104,7 +104,7 @@ class FieldAPI(object):
                 recall=float(field.get('recall', 0.0)),
                 document_count=int(field.get('document_count', 0)),
                 is_custom=bool(field.get('is_custom')),
-                is_llm=bool(field.get('is_llm'))
+                has_answers=bool(field.get('has_answers'))
             ))
 
         return fields, caller

@@ -29,4 +29,4 @@ class Field:
     recall: float
     document_count: int
     is_custom: bool
-    is_llm: bool
+    has_answers: bool
