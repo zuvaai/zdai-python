@@ -26,13 +26,14 @@ class FileAPI(object):
     def __init__(self, token: str, url: str):
         self._call = ApiCall(token, url)
 
-    def create(self, content: bytes, is_zuva_ocr: bool = False, expiration: str = None) -> Tuple[File, ApiCall]:
+    def create(self, content: bytes, is_zuva_ocr: bool = False, expiration: str = None, headers: dict = None) -> Tuple[File, ApiCall]:
         """
         Creates a new file in the ZDAI
 
         :param content: The byte-content of the data to submit.
         :param is_zuva_ocr: If the byte content provided comes from a .zuvaocr file.
         :param expiration: Set the expiration of the document. Defaults to 7d in DocAI. Max 13d.
+        :param headers: Set additional headers.
         :return:
         """
         caller = self._call.new(method = 'POST', path = f'files')
@@ -41,6 +42,10 @@ class FileAPI(object):
         if is_zuva_ocr: caller.add_header(key = 'Content-Type', value = 'application/eocr')
         if expiration: caller.add_header(key = 'Expiration', value = expiration)
         caller.add_header(key='X-Attr-Pdf-Object-Streams', value='generate')
+
+        if headers:
+            for k, v in headers.items():
+                caller.add_header(key = k, value = v)
 
         caller.set_body_value(value = content)
         caller.send()
