@@ -78,6 +78,8 @@ class ApiCall(ApiEndpoint):
                 raise ApiCallNotFoundError(self)
             elif self.response.status_code == 409:
                 raise ApiCallConflictError(self)
+            elif self.response.status_code == 429:
+                raise ApiCallTooManyRequestsError(self)
             elif self.response.status_code == 500:
                 raise ApiCallInternalServerError(self)
             else:

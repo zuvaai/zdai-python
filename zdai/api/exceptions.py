@@ -77,6 +77,13 @@ class ApiCallConflictError(ApiCallError):
         self.formatted_message = f'Conflict: {self.error_code}: {self.error_message}'
         super().__init__(call)
 
+class ApiCallTooManyRequestsError(ApiCallError):
+    def __init__(self, call):
+        self.call = call
+        self.error_code, self.error_message = _get_error_data(call.response.content)
+        self.formatted_message = f'Too Many Requests (Rate Limit Reached): {self.error_code}: {self.error_message}'
+        super().__init__(call)
+
 
 class ApiCallInternalServerError(ApiCallError):
     def __init__(self, call):
